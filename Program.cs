@@ -60,9 +60,7 @@ public class Program
 
     var client = provider.GetRequiredService<DiscordSocketClient>();
     client.Log += OnClientLog;
-    client.Ready += OnClientReady;
-    client.Ready += async () => await _slashCommands.RegisterCommandsToGuildAsync(ulong.Parse(config["testGuildId"]));
-    client.GuildScheduledEventCreated += async (SocketGuildEvent e) => await OnEventCreated(e);
+    client.Ready += async () => await _slashCommands.RegisterCommandsGloballyAsync(true); await OnClientReady();
     client.GuildScheduledEventStarted += async (SocketGuildEvent e) => await OnEventStarted(e);
     client.GuildScheduledEventCompleted += async (SocketGuildEvent e) => await OnEventCompleted(e);
 
@@ -74,20 +72,23 @@ public class Program
 
   private static async Task OnEventCompleted(SocketGuildEvent e)
   {
-    await e.Guild.GetTextChannel(ulong.Parse(e.Location))?.SendMessageAsync(
-      $"**{e.Name}** window has **ended**! @everyone");
+    string[] eventArgs = e.Location.Split(',');
+    ulong channelId = ulong.Parse(eventArgs[0]);
+    var channel = e.Guild.GetTextChannel(channelId);
+    string msg = $"**{e.Name}** window **ended {TimestampTag.FromDateTimeOffset(DateTimeOffset.UtcNow, TimestampTagStyles.Relative)}**! @noone";
+
+    await channel.SendMessageAsync(msg);
   }
 
   private static async Task OnEventStarted(SocketGuildEvent e)
   {
-    await e.Guild.GetTextChannel(ulong.Parse(e.Location))?.SendMessageAsync(
-      $"**{e.Name}** window **starts {TimestampTag.FromDateTimeOffset(e.StartTime, TimestampTagStyles.Relative)}**! @everyone");
-  }
+    string[] eventArgs = e.Location.Split(',');
+    ulong channelId = ulong.Parse(eventArgs[0]);
+    int headsUpMinutes = int.Parse(eventArgs[1]);
+    var channel = e.Guild.GetTextChannel(channelId);
+    string msg = $"**{e.Name}** window **starts {TimestampTag.FromDateTimeOffset(e.StartTime.AddMinutes(headsUpMinutes), TimestampTagStyles.Relative)}**! @noone";
 
-  private static Task OnEventCreated(SocketGuildEvent e)
-  {
-    return Task.CompletedTask;
-    //await e.Guild.GetTextChannel(ulong.Parse(e.Location)).SendMessageAsync($"https://discord.com/events/{e.Guild.Id}/{e.Id}");
+    await channel.SendMessageAsync(msg);
   }
 
   public static Task OnClientLog(LogMessage msg)
