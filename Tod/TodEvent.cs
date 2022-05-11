@@ -3,38 +3,34 @@ using Discord.Interactions;
 using Discord.Rest;
 using System;
 using System.Threading.Tasks;
-using static L2Calendar.EpicsData;
+using static L2Calendar.EpicsDataConst;
 
 namespace L2Calendar.Tod
 {
   internal class TodEvent
   {
-    internal static async Task<RestGuildEvent> Create(SocketInteractionContext context, BossNames bossName, DateTimeOffset tod, TimeSpan spawnTimer, TimeSpan spawnWindow, TimeSpan headsupTime)
+    internal static async Task<RestGuildEvent> Create(SocketInteractionContext context, BossNames bossName, DateTimeOffset windowStartTime, DateTimeOffset windowEndTime, TimeSpan headsupTime)
     {
-      var windowStart = tod + spawnTimer;
-      var timeTilWindowStart = windowStart - DateTimeOffset.Now;
-      headsupTime = TimeSpan.FromSeconds(Math.Min(headsupTime.TotalSeconds, timeTilWindowStart.TotalSeconds - 1));
-      var eventStart = windowStart - headsupTime;
-      Console.WriteLine(
-        $"timeNow: {DateTimeOffset.Now}\n" +
-        $"windowStart: {windowStart}\n" +
-        $"timeTilWindowStart: {timeTilWindowStart}\n" +
-        $"headsup: {headsupTime}\n" +
-        $"eventStart: {eventStart}" +
-        $"");
-      var eventEnd = tod + spawnTimer + spawnWindow;
+      bool isWindowStarted = windowStartTime <= DateTimeOffset.Now;
+      // if window has started, time til window is 0
+      var timeTilWindowStart = isWindowStarted ? TimeSpan.Zero : windowStartTime - DateTimeOffset.Now;
+      // if there isnt enough time for the wanted heads up notification, notify sooner
+      headsupTime = TimeSpan.FromSeconds(Math.Min(headsupTime.TotalSeconds, timeTilWindowStart.TotalSeconds));
+      var eventStartTime = isWindowStarted ? DateTimeOffset.Now : windowStartTime - headsupTime;
+      // give a little head room for the event to be created and launched properly
+      eventStartTime += EVENT_HEADROOM;
 
       return await context.Guild.CreateEventAsync(
         name: bossName.ToString(),
-        startTime: eventStart,
+        startTime: eventStartTime,
         type: GuildScheduledEventType.External,
-        endTime: eventEnd,
+        endTime: windowEndTime,
         location: $"{context.Channel.Id},{headsupTime.Minutes}",
         description:
-          $"Start: **{TimestampTag.FromDateTimeOffset(eventStart, TimestampTagStyles.Relative)}** " +
-          $"({TimestampTag.FromDateTimeOffset(eventStart)})\n" +
-          $"End: **{TimestampTag.FromDateTimeOffset(eventEnd, TimestampTagStyles.Relative)}** " +
-          $"({TimestampTag.FromDateTimeOffset(eventEnd)})");
+          $"Start: **{TimestampTag.FromDateTimeOffset(eventStartTime, TimestampTagStyles.Relative)}** " +
+          $"({TimestampTag.FromDateTimeOffset(eventStartTime)})\n" +
+          $"End: **{TimestampTag.FromDateTimeOffset(windowEndTime, TimestampTagStyles.Relative)}** " +
+          $"({TimestampTag.FromDateTimeOffset(windowEndTime)})");
     }
   }
 }
