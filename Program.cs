@@ -25,8 +25,12 @@ public class Program
         .AddSingleton(config)
         .AddSingleton(x => new DiscordSocketClient(new DiscordSocketConfig
         {
+#if DEBUG
           LogLevel = LogSeverity.Debug,
-          AlwaysDownloadUsers = true
+#else
+          LogLevel = LogSeverity.Info,
+#endif
+          GatewayIntents = GatewayIntents.GuildScheduledEvents | GatewayIntents.Guilds
         }))
         .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
         .AddSingleton<InteractionHandler>()
@@ -84,7 +88,7 @@ public class Program
 
   public static Task OnClientLog(LogMessage msg)
   {
-    return Task.CompletedTask.ContinueWith(_ => Console.WriteLine("OnClientLog: " + msg));
+    return Task.Run(() => Console.WriteLine(msg));
   }
 
   public static Task OnClientReady()
