@@ -1,6 +1,8 @@
 ﻿using Discord;
 using Discord.Interactions;
+using Discord.WebSocket;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using static L2Calendar.EpicsDataConst;
 
@@ -16,6 +18,12 @@ namespace L2Calendar.Tod
       [Summary("Heads-up-time", "Get notified ahead of the window start, in minutes. Default is 15.")]
       int headsUpTime = 15)
     {
+      if (TryGetTodEvent(bossName, out var e))
+      {
+        await RespondAsync($"**{bossName}** reminder already exists: {e.GetUrl()}", ephemeral: true);
+        return;
+      }
+
       TimeSpan spawnTimer = TimeSpan.FromHours(DEATH_DURATIONS[(int)bossName]);
       TimeSpan spawnWindow = TimeSpan.FromHours(WINDOW_DURATIONS[(int)bossName]);
       var lastKnownDeath = new DateTimeOffset(lastKnownTod);
@@ -44,9 +52,8 @@ namespace L2Calendar.Tod
       var possibleSpawnsMsg = $"**{Math.Floor(hoursSinceLastKnownTod / deathDuration)}** possible spawns missed";
 
       var e = await TodEvent.Create(Context, bossName, windowStartTime, windowEndTime, headsupTime);
-      var embedUrl = $"https://discord.com/events/{Context.Guild.Id}/{e.Id}";
 
-      var embed = TodEmbed.Create(bossName, newTod, deathDuration, windowDuration, EPIC_THUMBNAILS[(int)bossName], Color.Red, embedUrl, possibleSpawnsMsg);
+      var embed = TodEmbed.Create(bossName, newTod, windowStartTime, windowEndTime, EPIC_THUMBNAILS[(int)bossName], Color.Red, e.GetUrl(), possibleSpawnsMsg);
 
       await RespondAsync(embed: embed.Build());
     }
@@ -56,8 +63,7 @@ namespace L2Calendar.Tod
       var windowStartTime = tod + deathDuration;
       var windowEndTime = tod + deathDuration + windowDuration;
       var e = await TodEvent.Create(Context, bossName, windowStartTime, windowEndTime, headsupTime);
-      var embedUrl = $"https://discord.com/events/{Context.Guild.Id}/{e.Id}";
-      var embed = TodEmbed.Create(bossName, tod, deathDuration, windowDuration, EPIC_THUMBNAILS[(int)bossName], Color.Orange, embedUrl, "Already in window!");
+      var embed = TodEmbed.Create(bossName, tod, windowStartTime, windowEndTime, EPIC_THUMBNAILS[(int)bossName], Color.Orange, e.GetUrl(), "Already in window!");
       await RespondAsync(embed: embed.Build());
     }
 
@@ -66,10 +72,19 @@ namespace L2Calendar.Tod
       var windowStartTime = tod + deathDuration;
       var windowEndTime = tod + deathDuration + windowDuration;
       var e = await TodEvent.Create(Context, bossName, windowStartTime, windowEndTime, headsupTime);
-      var embedUrl = $"https://discord.com/events/{Context.Guild.Id}/{e.Id}";
-      var embed = TodEmbed.Create(bossName, tod, deathDuration, windowDuration, EPIC_THUMBNAILS[(int)bossName], Color.Green, embedUrl);
+      var embed = TodEmbed.Create(bossName, tod, windowStartTime, windowEndTime, EPIC_THUMBNAILS[(int)bossName], Color.Green, e.GetUrl());
 
       await RespondAsync(embed: embed.Build());
+    }
+
+    private bool TryGetTodEvent(BossNames bossName, out SocketGuildEvent e)
+    {
+      e = Context.Guild.Events.FirstOrDefault(e =>
+        e.Name == bossName.ToString() &&
+        e.Creator.Id == Context.Client.CurrentUser.Id &&
+        (e.Status == GuildScheduledEventStatus.Scheduled || e.Status == GuildScheduledEventStatus.Active));
+
+      return e != null;
     }
   }
 }

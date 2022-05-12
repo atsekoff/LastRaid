@@ -25,10 +25,10 @@ namespace L2Calendar.Tod
         startTime: eventStartTime,
         type: GuildScheduledEventType.External,
         endTime: windowEndTime,
-        location: $"{context.Channel.Id},{headsupTime.Minutes}",
+        location: $"{context.Channel.Id}",
         description:
-          $"Start: **{TimestampTag.FromDateTimeOffset(eventStartTime, TimestampTagStyles.Relative)}** " +
-          $"({TimestampTag.FromDateTimeOffset(eventStartTime)})\n" +
+          $"Start: **{TimestampTag.FromDateTimeOffset(windowStartTime, TimestampTagStyles.Relative)}** " +
+          $"({TimestampTag.FromDateTimeOffset(windowStartTime)})\n" +
           $"End: **{TimestampTag.FromDateTimeOffset(windowEndTime, TimestampTagStyles.Relative)}** " +
           $"({TimestampTag.FromDateTimeOffset(windowEndTime)})");
     }

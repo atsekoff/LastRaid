@@ -2,12 +2,10 @@
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
-using L2Calendar.Modules;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace L2Calendar;
@@ -36,7 +34,7 @@ public class Program
         .AddSingleton<PrefixHandler>()
         )
       .Build();
-      
+
     await RunAsync(host, config);
   }
 
@@ -52,11 +50,6 @@ public class Program
         Console.WriteLine(msg.Message + "(" + msg.Exception.Message + ")");
         return Task.CompletedTask;
       };
-   
-
-    var _prefixCommands = provider.GetRequiredService<PrefixHandler>();
-    await _prefixCommands.InitializeAsync(); // doesnt register PrefixModules automatically
-    _prefixCommands.AddModule<PrefixModule>();
 
     var client = provider.GetRequiredService<DiscordSocketClient>();
     client.Log += OnClientLog;
@@ -75,18 +68,16 @@ public class Program
     string[] eventArgs = e.Location.Split(',');
     ulong channelId = ulong.Parse(eventArgs[0]);
     var channel = e.Guild.GetTextChannel(channelId);
-    string msg = $"**{e.Name}** window **ended {TimestampTag.FromDateTimeOffset(DateTimeOffset.UtcNow, TimestampTagStyles.Relative)}**! @noone";
+    string msg = $"**{e.Name}** window **ended {TimestampTag.FromDateTimeOffset(DateTimeOffset.UtcNow, TimestampTagStyles.Relative)}**! @LastRaiders";
 
     await channel.SendMessageAsync(msg);
   }
 
   private static async Task OnEventStarted(SocketGuildEvent e)
   {
-    string[] eventArgs = e.Location.Split(',');
-    ulong channelId = ulong.Parse(eventArgs[0]);
-    int headsUpMinutes = int.Parse(eventArgs[1]);
+    ulong channelId = ulong.Parse(e.Location);
     var channel = e.Guild.GetTextChannel(channelId);
-    string msg = $"**{e.Name}** window **starts {TimestampTag.FromDateTimeOffset(e.StartTime.AddMinutes(headsUpMinutes), TimestampTagStyles.Relative)}**! @noone";
+    string msg = $"**{e.Name}** window reminder @LastRaiders\n{e.GetUrl()}";
 
     await channel.SendMessageAsync(msg);
   }
