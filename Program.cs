@@ -57,7 +57,6 @@ public class Program
 
     var client = provider.GetRequiredService<DiscordSocketClient>();
     client.Log += OnClientLog;
-    client.Ready += async () => await _slashCommands.RegisterCommandsGloballyAsync(true); await OnClientReady();
     client.GuildScheduledEventStarted += async (SocketGuildEvent e) => await OnEventStarted(e);
     client.GuildScheduledEventCompleted += async (SocketGuildEvent e) => await OnEventCompleted(e);
 
@@ -89,10 +88,5 @@ public class Program
   public static Task OnClientLog(LogMessage msg)
   {
     return Task.Run(() => Console.WriteLine(msg));
-  }
-
-  public static Task OnClientReady()
-  {
-    return Task.CompletedTask.ContinueWith(_ => Console.WriteLine("OnClientReady: Bot ready!"));
   }
 }
