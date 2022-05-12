@@ -4,7 +4,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace L2Calendar
+namespace LastRaid
 {
   public class InteractionHandler
   {

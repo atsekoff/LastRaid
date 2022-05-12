@@ -1,6 +1,6 @@
 ﻿using Discord;
 
-namespace L2Calendar
+namespace LastRaid
 {
   internal static class Utils
   {

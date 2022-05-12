@@ -3,9 +3,9 @@ using Discord.Interactions;
 using Discord.Rest;
 using System;
 using System.Threading.Tasks;
-using static L2Calendar.EpicsDataConst;
+using static LastRaid.EpicsDataConst;
 
-namespace L2Calendar.Tod
+namespace LastRaid.Tod
 {
   internal class TodEvent
   {

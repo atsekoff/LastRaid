@@ -1,8 +1,8 @@
 ﻿using Discord;
 using System;
-using static L2Calendar.EpicsDataConst;
+using static LastRaid.EpicsDataConst;
 
-namespace L2Calendar.Tod
+namespace LastRaid.Tod
 {
   internal class TodEmbed
   {

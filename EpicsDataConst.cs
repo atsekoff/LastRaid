@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace L2Calendar
+namespace LastRaid
 {
   public static class EpicsDataConst
   {

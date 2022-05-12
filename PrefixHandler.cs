@@ -3,7 +3,7 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 
-namespace L2Calendar
+namespace LastRaid
 {
   public class PrefixHandler
   {

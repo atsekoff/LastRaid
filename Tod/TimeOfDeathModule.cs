@@ -4,9 +4,9 @@ using Discord.WebSocket;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using static L2Calendar.EpicsDataConst;
+using static LastRaid.EpicsDataConst;
 
-namespace L2Calendar.Tod
+namespace LastRaid.Tod
 {
   public class TimeOfDeathModule : InteractionModuleBase<SocketInteractionContext>
   {

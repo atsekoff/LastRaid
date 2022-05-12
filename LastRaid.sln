@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32427.441
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Calendar", "L2Calendar.csproj", "{443DC88C-3DE1-4064-A239-963FCC93DDC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LastRaid", "LastRaid.csproj", "{443DC88C-3DE1-4064-A239-963FCC93DDC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

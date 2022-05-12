@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
 
-namespace L2Calendar;
+namespace LastRaid;
 
 public class Program
 {
