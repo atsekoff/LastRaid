@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Discord.WebSocket;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,34 +49,48 @@ namespace LastRaid.Tod
       var windowStartTime = newTod;
       var windowEndTime = newTod + deathDuration + windowDuration;
       var possibleSpawnsMsg = $"**{Math.Floor(hoursSinceLastKnownTod / deathDuration)}** possible spawns missed";
-
-      var e = await TodEvent.Create(Context, bossName, windowStartTime, windowEndTime, headsupTime);
-
-      var embed = TodEmbed.Create(bossName, newTod, windowStartTime, windowEndTime, EPIC_THUMBNAILS[(int)bossName], Color.Red, e.GetUrl(), possibleSpawnsMsg);
-
-      await RespondAsync(embed: embed.Build());
+      await CreateTodReminder(bossName, newTod, windowStartTime, windowEndTime, headsupTime, Color.Red, possibleSpawnsMsg);
     }
 
     private async Task HandleCurrentlyInWindow(BossNames bossName, DateTimeOffset tod, TimeSpan deathDuration, TimeSpan windowDuration, TimeSpan headsupTime)
     {
       var windowStartTime = tod + deathDuration;
       var windowEndTime = tod + deathDuration + windowDuration;
-      var e = await TodEvent.Create(Context, bossName, windowStartTime, windowEndTime, headsupTime);
-      var embed = TodEmbed.Create(bossName, tod, windowStartTime, windowEndTime, EPIC_THUMBNAILS[(int)bossName], Color.Orange, e.GetUrl(), "Already in window!");
-      await RespondAsync(embed: embed.Build());
+      string description = "Already in window!";
+      await CreateTodReminder(bossName, tod, windowStartTime, windowEndTime, headsupTime, Color.Orange, description);
     }
 
     private async Task HandleExactTod(BossNames bossName, DateTimeOffset tod, TimeSpan deathDuration, TimeSpan windowDuration, TimeSpan headsupTime)
     {
       var windowStartTime = tod + deathDuration;
       var windowEndTime = tod + deathDuration + windowDuration;
-      var e = await TodEvent.Create(Context, bossName, windowStartTime, windowEndTime, headsupTime);
-      var embed = TodEmbed.Create(bossName, tod, windowStartTime, windowEndTime, EPIC_THUMBNAILS[(int)bossName], Color.Green, e.GetUrl());
-
-      await RespondAsync(embed: embed.Build());
+      await CreateTodReminder(bossName, tod, windowStartTime, windowEndTime, headsupTime, Color.Green);
     }
 
-    private bool TryGetTodEvent(BossNames bossName, out SocketGuildEvent? e)
+    private async Task CreateTodReminder(BossNames bossName, DateTimeOffset tod, DateTimeOffset windowStartTime, DateTimeOffset windowEndTime, TimeSpan headsupTime, Color color, string desc = "")
+    {
+      try
+      {
+        IGuildScheduledEvent? e = await TodEvent.Create(Context, bossName, windowStartTime, windowEndTime, headsupTime);
+
+        try
+        {
+          EmbedBuilder embed = TodEmbed.Create(bossName, tod, windowStartTime, windowEndTime, color, e.GetUrl(), desc);
+          await RespondAsync(embed: embed.Build());
+        }
+        catch (Exception ex)
+        {
+          await RespondAsync($"Failed to create a reminder: {ex.Message}", ephemeral: true);
+          await e.DeleteAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        await RespondAsync($"Failed to create event: {ex.Message}", ephemeral: true);
+      }
+    }
+
+    private bool TryGetTodEvent(BossNames bossName, out IGuildScheduledEvent? e)
     {
       e = Context.Guild.Events.FirstOrDefault(e =>
         e.Name == bossName.ToString() &&

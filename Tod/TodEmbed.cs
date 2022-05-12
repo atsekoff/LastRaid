@@ -6,13 +6,13 @@ namespace LastRaid.Tod
 {
   internal class TodEmbed
   {
-    internal static EmbedBuilder Create(BossNames bossName, DateTimeOffset tod, DateTimeOffset windowStartTime, DateTimeOffset windowEndTime, string thumbnailUrl, Color color, string link = "", string description = "")
+    internal static EmbedBuilder Create(BossNames bossName, DateTimeOffset tod, DateTimeOffset windowStartTime, DateTimeOffset windowEndTime, Color color, string link = "", string description = "")
     {
       return new EmbedBuilder()
         .WithColor(color)
         .WithDescription(description)
         .WithFooter($"Respawn: {DEATH_DURATIONS[(int)bossName]} + {WINDOW_DURATIONS[(int)bossName]}")
-        .WithThumbnailUrl(thumbnailUrl)
+        .WithThumbnailUrl(EPIC_THUMBNAILS[(int)bossName])
         .WithTitle(bossName.ToString())
         .WithUrl(link)
         .AddField(new EmbedFieldBuilder()

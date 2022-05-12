@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Discord.Rest;
 using System;
 using System.Threading.Tasks;
 using static LastRaid.EpicsDataConst;
@@ -9,7 +8,7 @@ namespace LastRaid.Tod
 {
   internal class TodEvent
   {
-    internal static async Task<RestGuildEvent> Create(SocketInteractionContext context, BossNames bossName, DateTimeOffset windowStartTime, DateTimeOffset windowEndTime, TimeSpan headsupTime)
+    internal static async Task<IGuildScheduledEvent> Create(SocketInteractionContext context, BossNames bossName, DateTimeOffset windowStartTime, DateTimeOffset windowEndTime, TimeSpan headsupTime)
     {
       bool isWindowStarted = windowStartTime <= DateTimeOffset.Now;
       // if window has started, time til window is 0
