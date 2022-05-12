@@ -20,7 +20,7 @@ namespace L2Calendar.Tod
     {
       if (TryGetTodEvent(bossName, out var e))
       {
-        await RespondAsync($"**{bossName}** reminder already exists: {e.GetUrl()}", ephemeral: true);
+        await RespondAsync($"**{bossName}** reminder already exists: {e?.GetUrl()}", ephemeral: true);
         return;
       }
 
@@ -77,7 +77,7 @@ namespace L2Calendar.Tod
       await RespondAsync(embed: embed.Build());
     }
 
-    private bool TryGetTodEvent(BossNames bossName, out SocketGuildEvent e)
+    private bool TryGetTodEvent(BossNames bossName, out SocketGuildEvent? e)
     {
       e = Context.Guild.Events.FirstOrDefault(e =>
         e.Name == bossName.ToString() &&
