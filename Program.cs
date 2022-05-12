@@ -30,12 +30,11 @@ public class Program
 #else
           LogLevel = LogSeverity.Info,
 #endif
-          GatewayIntents = GatewayIntents.GuildScheduledEvents | GatewayIntents.Guilds
+          GatewayIntents = GatewayIntents.GuildScheduledEvents | GatewayIntents.Guilds,
+          LogGatewayIntentWarnings = true,
         }))
         .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
         .AddSingleton<InteractionHandler>()
-        .AddSingleton(x => new CommandService())
-        .AddSingleton<PrefixHandler>()
         )
       .Build();
 
@@ -47,13 +46,14 @@ public class Program
     using IServiceScope serviceScope = host.Services.CreateScope();
     IServiceProvider provider = serviceScope.ServiceProvider;
 
-    var _slashCommands = provider.GetRequiredService<InteractionService>();
+    var slashCommands = provider.GetRequiredService<InteractionService>();
     await provider.GetRequiredService<InteractionHandler>().InitializeAsync(); // registers all available InteractionModules
 
     var client = provider.GetRequiredService<DiscordSocketClient>();
     client.Log += OnClientLog;
     client.GuildScheduledEventStarted += async (SocketGuildEvent e) => await OnEventStarted(e);
     client.GuildScheduledEventCompleted += async (SocketGuildEvent e) => await OnEventCompleted(e);
+    client.GuildAvailable += async (SocketGuild g) => await slashCommands.RegisterCommandsToGuildAsync(g.Id, true);
 
 #if DEBUG
     await client.LoginAsync(TokenType.Bot, config["token:debug"]);
