@@ -49,18 +49,17 @@ public class Program
 
     var _slashCommands = provider.GetRequiredService<InteractionService>();
     await provider.GetRequiredService<InteractionHandler>().InitializeAsync(); // registers all available InteractionModules
-    _slashCommands.Log += (LogMessage msg) =>
-      {
-        Console.WriteLine(msg.Message + "(" + msg.Exception.Message + ")");
-        return Task.CompletedTask;
-      };
 
     var client = provider.GetRequiredService<DiscordSocketClient>();
     client.Log += OnClientLog;
     client.GuildScheduledEventStarted += async (SocketGuildEvent e) => await OnEventStarted(e);
     client.GuildScheduledEventCompleted += async (SocketGuildEvent e) => await OnEventCompleted(e);
 
-    await client.LoginAsync(TokenType.Bot, config["token"]);
+#if DEBUG
+    await client.LoginAsync(TokenType.Bot, config["token:debug"]);
+#else
+    await client.LoginAsync(TokenType.Bot, config["token:release"]);
+#endif
     await client.StartAsync();
 
     await Task.Delay(-1);
