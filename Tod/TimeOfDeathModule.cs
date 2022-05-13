@@ -7,15 +7,39 @@ using static LastRaid.EpicsDataConst;
 
 namespace LastRaid.Tod
 {
+  [Group("tod", "Commands for creating RB respawn window reminders.")]
   public class TimeOfDeathModule : InteractionModuleBase<SocketInteractionContext>
   {
-    [SlashCommand("tod", "Creates an event reminder for next boss spawn.")]
+    [SlashCommand("relative", "How long ago it died as HH:MM. Max 24 hours ago!")]
+    public async Task HandleRelativeTodCommand(BossNames bossName,
+      [Summary("relative-time", "How long since boss death in HH:MM (e.g. 00:25 -> 25 min ago)")]
+      DateTime relativeTime,
+      [Summary("Heads-up-time", "Get notified ahead of the window start, in minutes. Default is 15.")]
+      int headsupTime = 15)
+    {
+      var tod = DateTimeOffset.Now.AddHours(-relativeTime.Hour).AddMinutes(-relativeTime.Minute);
+      var headsup = TimeSpan.FromMinutes(headsupTime);
+
+      await HandleTod(bossName, tod, headsup);
+    }
+
+    [SlashCommand("exact", "Exact date and time of death.")]
     public async Task HandleBossTodCommand(
       BossNames bossName,
-      [Summary("Last-known-time-of-death", "In format dd.mm.yyyy hh:mm. Or just hh:mm.")]
+      [Summary("Last-known-time-of-death", "DD.MM.YYYY HH:MM -> Use your local time.")]
       DateTime lastKnownTod,
+      [Summary("Local-time", "DD.MM.YYYY HH:MM -> The date and time shown on your pc clock")]
+      DateTime userTime,
       [Summary("Heads-up-time", "Get notified ahead of the window start, in minutes. Default is 15.")]
       int headsUpTime = 15)
+    {
+      var tod = new DateTimeOffset(lastKnownTod.ConvertToLocalDateTime(userTime));
+      var headsup = TimeSpan.FromMinutes(headsUpTime);
+
+      await HandleTod(bossName, tod, headsup);
+    }
+
+    private async Task HandleTod(BossNames bossName, DateTimeOffset tod, TimeSpan headsupTime)
     {
       if (TryGetTodEvent(bossName, out var e))
       {
@@ -25,22 +49,21 @@ namespace LastRaid.Tod
 
       TimeSpan spawnTimer = TimeSpan.FromHours(DEATH_DURATIONS[(int)bossName]);
       TimeSpan spawnWindow = TimeSpan.FromHours(WINDOW_DURATIONS[(int)bossName]);
-      var lastKnownDeath = new DateTimeOffset(lastKnownTod);
-      TimeSpan hoursSinceLastKnownTod = DateTimeOffset.UtcNow.Subtract(lastKnownDeath).Duration();
+      TimeSpan hoursSinceLastKnownTod = DateTimeOffset.UtcNow.Subtract(tod).Duration();
 
       if (spawnTimer >= hoursSinceLastKnownTod)
       {
-        await HandleExactTod(bossName, lastKnownTod, spawnTimer, spawnWindow, TimeSpan.FromMinutes(headsUpTime));
+        await HandleExactTod(bossName, tod, spawnTimer, spawnWindow, headsupTime);
         return;
       }
 
       if (hoursSinceLastKnownTod < spawnTimer + spawnWindow)
       {
-        await HandleCurrentlyInWindow(bossName, lastKnownDeath, spawnTimer, spawnWindow, TimeSpan.FromMinutes(headsUpTime));
+        await HandleCurrentlyInWindow(bossName, tod, spawnTimer, spawnWindow, headsupTime);
         return;
       }
 
-      await HandleUnknownTod(bossName, hoursSinceLastKnownTod, spawnTimer, spawnWindow, TimeSpan.FromMinutes(headsUpTime));
+      await HandleUnknownTod(bossName, hoursSinceLastKnownTod, spawnTimer, spawnWindow, headsupTime);
     }
 
     private async Task HandleUnknownTod(BossNames bossName, TimeSpan hoursSinceLastKnownTod, TimeSpan deathDuration, TimeSpan windowDuration, TimeSpan headsupTime)

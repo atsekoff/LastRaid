@@ -70,7 +70,7 @@ public class Program
     string[] eventArgs = e.Location.Split(',');
     ulong channelId = ulong.Parse(eventArgs[0]);
     var channel = e.Guild.GetTextChannel(channelId);
-    string msg = $"**{e.Name}** window **ended {TimestampTag.FromDateTimeOffset(DateTimeOffset.UtcNow, TimestampTagStyles.Relative)}**! @LastRaiders";
+    string msg = $"**{e.Name}** window **ended {TimestampTag.FromDateTimeOffset(DateTimeOffset.UtcNow, TimestampTagStyles.Relative)}**! @everyone";
 
     await channel.SendMessageAsync(msg);
   }
@@ -79,7 +79,7 @@ public class Program
   {
     ulong channelId = ulong.Parse(e.Location);
     var channel = e.Guild.GetTextChannel(channelId);
-    string msg = $"**{e.Name}** window reminder @LastRaiders\n{e.GetUrl()}";
+    string msg = $"**{e.Name}** window reminder @everyone \n{e.GetUrl()}";
 
     await channel.SendMessageAsync(msg);
   }
