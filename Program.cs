@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using static LastRaid.EpicsDataConst;
 using static LastRaid.Utils;
@@ -91,7 +92,8 @@ public class Program
 
     if (msg is not IUserMessage userMsg) return;
 
-    _ = userMsg.ReplyAsync($"**{e.Name}** window reminder @everyone");
+    string startDescription = e.Description.Split('\n').First();
+    _ = userMsg.ReplyAsync($"**{e.Name}** window {startDescription} @everyone");
     _ = userMsg.ModifyAsync(mp =>
     {
       mp.Components = TodComponentTools.CreateWindowStartedComponent().Build();
