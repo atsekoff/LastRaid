@@ -75,8 +75,7 @@ public class Program
     IMessage msg = await channel.GetMessageAsync(msgId);
 
     if (msg is not IUserMessage userMsg) return;
-
-    if (userMsg.TryGetButtonLabeled(SPAWNED_BUTTON_LABEL, out ButtonComponent? button))
+    if (userMsg.TryGetButtonLabeled(SPAWNED_BUTTON_LABEL, out _))
     {
       await userMsg.UpdateTodMsgStateAsync(TodState.Spawned);
       await userMsg.ReplyAsync($"**{e.Name}** window has ended! Go kill @everyone");

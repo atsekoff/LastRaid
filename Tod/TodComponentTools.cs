@@ -17,8 +17,7 @@ namespace LastRaid.Tod
     internal static ComponentBuilder CreateWindowStartedComponent()
     {
       return new ComponentBuilder()
-        .WithButton(CreateSpawnedButton())
-        .WithButton(CreateCancelButton());
+        .WithButton(CreateSpawnedButton());
     }
 
     internal static ComponentBuilder CreateSpawnedComponent()
