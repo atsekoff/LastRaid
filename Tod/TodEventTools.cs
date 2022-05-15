@@ -1,14 +1,16 @@
 ﻿using Discord;
 using Discord.Interactions;
+using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
 using static LastRaid.EpicsDataConst;
 
 namespace LastRaid.Tod
 {
-  internal class TodEvent
+  internal static class TodEventTools
   {
-    internal static async Task<IGuildScheduledEvent> Create(SocketInteractionContext context, BossNames bossName, DateTimeOffset windowStartTime, DateTimeOffset windowEndTime, TimeSpan headsupTime)
+    private const char _separator = ',';
+    internal static async Task<IGuildScheduledEvent> CreateTodEvent(SocketInteractionContext context, BossNames bossName, DateTimeOffset windowStartTime, DateTimeOffset windowEndTime, TimeSpan headsupTime)
     {
       bool isWindowStarted = windowStartTime <= DateTimeOffset.Now;
       // if window has started, time til window is 0
@@ -30,6 +32,21 @@ namespace LastRaid.Tod
           $"({TimestampTag.FromDateTimeOffset(windowStartTime)})\n" +
           $"End: **{TimestampTag.FromDateTimeOffset(windowEndTime, TimestampTagStyles.Relative)}** " +
           $"({TimestampTag.FromDateTimeOffset(windowEndTime)})");
+    }
+
+    internal static string BuildMetadata(ulong channelId, ulong msgId)
+    {
+      return $"{channelId}{_separator}{msgId}";
+    }
+
+    internal static ulong GetChannelId(SocketGuildEvent e)
+    {
+      return ulong.Parse(e.Location.Split(_separator)[0]);
+    }
+
+    internal static ulong GetMsgId(SocketGuildEvent e)
+    {
+      return ulong.Parse(e.Location.Split(_separator)[1]);
     }
   }
 }

@@ -1,7 +1,8 @@
 ﻿using Discord;
-using Discord.Commands;
 using Discord.Interactions;
+using Discord.Rest;
 using Discord.WebSocket;
+using LastRaid.Tod;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -52,7 +53,6 @@ public class Program
     var client = provider.GetRequiredService<DiscordSocketClient>();
     client.Log += OnClientLog;
     client.GuildScheduledEventStarted += async (SocketGuildEvent e) => await OnEventStarted(e);
-    client.GuildScheduledEventCompleted += async (SocketGuildEvent e) => await OnEventCompleted(e);
     client.GuildAvailable += async (SocketGuild g) => await slashCommands.RegisterCommandsToGuildAsync(g.Id, true);
 
 #if DEBUG
@@ -65,24 +65,23 @@ public class Program
     await Task.Delay(-1);
   }
 
-  private static async Task OnEventCompleted(SocketGuildEvent e)
-  {
-    string[] eventArgs = e.Location.Split(',');
-    ulong channelId = ulong.Parse(eventArgs[0]);
-    var channel = e.Guild.GetTextChannel(channelId);
-    string msg = $"**{e.Name}** window **ended {TimestampTag.FromDateTimeOffset(DateTimeOffset.UtcNow, TimestampTagStyles.Relative)}**! @everyone";
-
-    await channel.SendMessageAsync(msg);
-  }
-
   private static async Task OnEventStarted(SocketGuildEvent e)
   {
-    ulong channelId = ulong.Parse(e.Location);
-    var channel = e.Guild.GetTextChannel(channelId);
-    string msg = $"**{e.Name}** window reminder @everyone \n{e.GetUrl()}";
+    ulong channelId = TodEventTools.GetChannelId(e);
+    SocketTextChannel channel = e.Guild.GetTextChannel(channelId);
+    ulong msgId = TodEventTools.GetMsgId(e);
+    IMessage msg = await channel.GetMessageAsync(msgId);
 
-    await channel.SendMessageAsync(msg);
+    if (msg is not IUserMessage userMsg)
+      return;
+
+    _ = userMsg.ReplyAsync($"**{e.Name}** window reminder @everyone");
+    _ = userMsg.ModifyAsync(mp =>
+    {
+      mp.Components = TodComponentTools.CreateWindowStartedComponent().Build();
+    });
   }
+
 
   public static Task OnClientLog(LogMessage msg)
   {

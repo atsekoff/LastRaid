@@ -4,12 +4,12 @@ using static LastRaid.EpicsDataConst;
 
 namespace LastRaid.Tod
 {
-  internal class TodEmbed
+  internal class TodEmbedTools
   {
-    internal static EmbedBuilder Create(BossNames bossName, DateTimeOffset tod, DateTimeOffset windowStartTime, DateTimeOffset windowEndTime, Color color, string link = "", string description = "")
+    internal static EmbedBuilder CreateTodEmbed(BossNames bossName, DateTimeOffset tod, DateTimeOffset windowStartTime, DateTimeOffset windowEndTime, string link = "", string description = "")
     {
       return new EmbedBuilder()
-        .WithColor(color)
+        .WithColor(Color.DarkerGrey)
         .WithDescription(description)
         .WithFooter($"Respawn: {DEATH_DURATIONS[(int)bossName]} + {WINDOW_DURATIONS[(int)bossName]}")
         .WithThumbnailUrl(EPIC_THUMBNAILS[(int)bossName])
