@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Interactions;
+using Discord.Rest;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -101,7 +102,7 @@ namespace LastRaid.Tod
         {
           EmbedBuilder embed = TodEmbedTools.CreateTodEmbed(bossName, tod, windowStartTime, windowEndTime, e.GetUrl(), desc);
           await RespondAsync(components: component.Build(), embed: embed.Build());
-          IMessage msg = (await Context.Channel.GetMessagesAsync(1).FlattenAsync()).First();
+          RestInteractionMessage msg = await Context.Interaction.GetOriginalResponseAsync();
           await e.ModifyAsync(ep => ep.Location = TodEventTools.BuildMetadata(Context.Channel.Id, msg.Id));
         }
         catch (Exception ex)
