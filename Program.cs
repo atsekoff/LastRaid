@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Discord.Rest;
 using Discord.WebSocket;
 using LastRaid.Tod;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
+using static LastRaid.EpicsDataConst;
+using static LastRaid.Utils;
 
 namespace LastRaid;
 
@@ -53,6 +54,7 @@ public class Program
     var client = provider.GetRequiredService<DiscordSocketClient>();
     client.Log += OnClientLog;
     client.GuildScheduledEventStarted += async (SocketGuildEvent e) => await OnEventStarted(e);
+    client.GuildScheduledEventCompleted += async (SocketGuildEvent e) => await OnEventCompleted(e);
     client.GuildAvailable += async (SocketGuild g) => await slashCommands.RegisterCommandsToGuildAsync(g.Id, true);
 
 #if DEBUG
@@ -65,6 +67,22 @@ public class Program
     await Task.Delay(-1);
   }
 
+  private static async Task OnEventCompleted(SocketGuildEvent e)
+  {
+    ulong channelId = TodEventTools.GetChannelId(e);
+    SocketTextChannel channel = e.Guild.GetTextChannel(channelId);
+    ulong msgId = TodEventTools.GetMsgId(e);
+    IMessage msg = await channel.GetMessageAsync(msgId);
+
+    if (msg is not IUserMessage userMsg) return;
+
+    if (userMsg.TryGetButtonLabeled(SPAWNED_BUTTON_LABEL, out ButtonComponent? button))
+    {
+      await userMsg.UpdateTodMsgStateAsync(TodState.Spawned);
+      await userMsg.ReplyAsync($"**{e.Name}** window has ended! Go kill @everyone");
+    }
+  }
+
   private static async Task OnEventStarted(SocketGuildEvent e)
   {
     ulong channelId = TodEventTools.GetChannelId(e);
@@ -72,8 +90,7 @@ public class Program
     ulong msgId = TodEventTools.GetMsgId(e);
     IMessage msg = await channel.GetMessageAsync(msgId);
 
-    if (msg is not IUserMessage userMsg)
-      return;
+    if (msg is not IUserMessage userMsg) return;
 
     _ = userMsg.ReplyAsync($"**{e.Name}** window reminder @everyone");
     _ = userMsg.ModifyAsync(mp =>

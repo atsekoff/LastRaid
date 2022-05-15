@@ -135,15 +135,7 @@ namespace LastRaid.Tod
     public async Task HandleOursButton()
     {
       if (Context.Interaction.TryGetMessage(out var msg))
-      {
-        _ = msg.ModifyAsync(mp =>
-        {
-          mp.Components = new ComponentBuilder().Build();
-          mp.Embed = msg.Embeds.First().ToEmbedBuilder()
-            .WithDescription("Kill by us! They didn't show, did they?")
-            .WithColor(Color.Green).Build();
-        });
-      }
+        await msg.UpdateTodMsgStateAsync(Utils.TodState.Ours);
 
       await RespondAsync();
     }
@@ -154,13 +146,18 @@ namespace LastRaid.Tod
     {
       if (Context.Interaction.TryGetMessage(out var msg))
       {
-        _ = msg.ModifyAsync(mp =>
-        {
-          mp.Components = new ComponentBuilder().Build();
-          mp.Embed = msg.Embeds.First().ToEmbedBuilder()
-            .WithDescription("Kill by enemies! Maybe stop clicking skills with mouse?")
-            .WithColor(Color.Red).Build();
-        });
+        await msg.UpdateTodMsgStateAsync(Utils.TodState.Enemies);
+      }
+
+      await RespondAsync();
+    }
+
+    [ComponentInteraction(NODROP_BUTTON_ID, true)]
+    public async Task HandleNoDropButton()
+    {
+      if (Context.Interaction.TryGetMessage(out var msg))
+      {
+        await msg.UpdateTodMsgStateAsync(Utils.TodState.NoDrop);
       }
 
       await RespondAsync();
@@ -173,13 +170,7 @@ namespace LastRaid.Tod
       {
         if (Context.Interaction.TryGetMessage(out var msg))
         {
-          _ = msg.ModifyAsync(mp => mp.Components = new ComponentBuilder().Build());
-
-          if (msg.TryGetTodEvent(out var e))
-          {
-            _ = e.EndAsync();
-          }
-
+          await msg.UpdateTodMsgStateAsync(Utils.TodState.Dead);
           await RespondAsync($"**{msg.Embeds.First().Title}** is dead! @everyone");
         }
       }
@@ -194,7 +185,7 @@ namespace LastRaid.Tod
     {
       if (Context.Interaction.TryGetMessage(out var msg))
       {
-        _ = msg.ModifyAsync(mp => mp.Components = TodComponentTools.CreateSpawnedComponent().Build());
+        await msg.UpdateTodMsgStateAsync(Utils.TodState.Spawned);
         await RespondAsync($"**{msg.Embeds.First().Title}** UP UP UP! @everyone FULL DAVAI!");
       }
     }

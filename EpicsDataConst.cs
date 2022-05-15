@@ -28,6 +28,8 @@ namespace LastRaid
     public const string OURS_BUTTON_ID = "oursbutton";
     public const string ENEMIES_BUTTON_LABEL = "Enemies";
     public const string ENEMIES_BUTTON_ID = "enemiesbutton";
+    public const string NODROP_BUTTON_LABEL = "No drop";
+    public const string NODROP_BUTTON_ID = "nodropbutton";
     public const string DEAD_BUTTON_LABEL = "Dead";
     public const string DEAD_BUTTON_ID = "deadbutton";
     public const string SPAWNED_BUTTON_LABEL = "Spawned";

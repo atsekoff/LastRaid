@@ -10,6 +10,7 @@ namespace LastRaid.Tod
       return new ComponentBuilder()
         .WithButton(CreateOursButton())
         .WithButton(CreateEnemiesButton())
+        .WithButton(CreateNoDropButton())
         .WithButton(CreateCancelButton());
     }
 
@@ -34,6 +35,11 @@ namespace LastRaid.Tod
     private static ButtonBuilder CreateEnemiesButton()
     {
       return new ButtonBuilder(ENEMIES_BUTTON_LABEL, ENEMIES_BUTTON_ID, ButtonStyle.Danger);
+    }
+
+    private static ButtonBuilder CreateNoDropButton()
+    {
+      return new ButtonBuilder(NODROP_BUTTON_LABEL, NODROP_BUTTON_ID, ButtonStyle.Primary);
     }
 
     private static ButtonBuilder CreateCancelButton()

@@ -1,21 +1,24 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+using LastRaid.Tod;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using static LastRaid.EpicsDataConst;
 
 namespace LastRaid
 {
   internal static class Utils
   {
+    internal enum TodState { Initial, Ours, Enemies, NoDrop, Started, Spawned, Dead }
     internal static string GetUrl(this IGuildScheduledEvent e)
     {
       return $"https://discord.com/events/{e.Guild.Id}/{e.Id}";
     }
 
-    internal static bool TryGetUrl(this IMessage msg, [NotNullWhen(true)]out string? url)
+    internal static bool TryGetUrl(this IMessage msg, [NotNullWhen(true)] out string? url)
     {
       url = null;
       ulong channelId = msg.Channel.Id;
@@ -41,7 +44,7 @@ namespace LastRaid
     {
       e = null;
 
-      if(ulong.TryParse(msg.Embeds.First()?.Url.Split('/').Last(), out ulong eventId))
+      if (ulong.TryParse(msg.Embeds.First()?.Url.Split('/').Last(), out ulong eventId))
       {
         e = (msg.Channel as SocketTextChannel)?.Guild.GetEvent(eventId);
       }
@@ -59,6 +62,24 @@ namespace LastRaid
       return @event != null;
     }
 
+    internal static bool TryGetButtonLabeled(this IUserMessage msg, string buttonLabel, [NotNullWhen(true)] out ButtonComponent? button)
+    {
+      button = null;
+      foreach (ActionRowComponent comp in msg.Components)
+      {
+        foreach (ButtonComponent but in comp.Components)
+        {
+          if (but.Label == buttonLabel)
+          {
+            button = but;
+            return true;
+          }
+        }
+      }
+
+      return button != null;
+    }
+
     internal static DateTimeOffset ConvertToLocalDateTimeOffset(this DateTime lastKnownTod, DateTime userTime)
     {
       var diff = DateTime.Now - userTime;
@@ -69,6 +90,54 @@ namespace LastRaid
     {
       var diff = DateTime.Now - userTime;
       return lastKnownTod + diff;
+    }
+
+    internal static async Task UpdateTodMsgStateAsync(this IUserMessage msg, TodState state)
+    {
+      switch (state)
+      {
+        case TodState.Initial:
+          throw new InvalidOperationException("InitialState should only be created using the TodReminder constructor");
+        case TodState.Ours:
+          await msg.ModifyAsync(mp =>
+          {
+            mp.Components = new ComponentBuilder().Build();
+            mp.Embed = msg.Embeds.First().ToEmbedBuilder()
+              .WithDescription("**Drop for us** Enemies didn't show, did they?")
+              .WithColor(Color.Green).Build();
+          });
+          break;
+        case TodState.Enemies:
+          await msg.ModifyAsync(mp =>
+          {
+            mp.Components = new ComponentBuilder().Build();
+            mp.Embed = msg.Embeds.First().ToEmbedBuilder()
+              .WithDescription("**Drop for enemies** Maybe stop clicking skills with mouse?")
+              .WithColor(Color.Red).Build();
+          });
+          break;
+        case TodState.NoDrop:
+          await msg.ModifyAsync(mp =>
+          {
+            mp.Components = new ComponentBuilder().Build();
+            mp.Embed = msg.Embeds.First().ToEmbedBuilder()
+              .WithDescription("**No drop** Sacrifice a dwarf next time.")
+              .WithColor(Color.Blue).Build();
+          });
+          break;
+        case TodState.Started:
+          await msg.ModifyAsync(mp => mp.Components = TodComponentTools.CreateWindowStartedComponent().Build());
+          break;
+        case TodState.Spawned:
+          await msg.ModifyAsync(mp => mp.Components = TodComponentTools.CreateSpawnedComponent().Build());
+          break;
+        case TodState.Dead:
+          _ = msg.ModifyAsync(mp => mp.Components = new ComponentBuilder().Build());
+          if (msg.TryGetTodEvent(out var e)) _ = e.EndAsync();
+          break;
+        default:
+          throw new InvalidOperationException($"Could not update TOD for state: {state}");
+      }
     }
   }
 }
