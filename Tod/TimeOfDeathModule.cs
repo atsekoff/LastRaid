@@ -135,7 +135,7 @@ namespace LastRaid.Tod
     public async Task HandleOursButton()
     {
       if (Context.Interaction.TryGetMessage(out var msg))
-        await msg.UpdateTodMsgStateAsync(Utils.TodState.Ours);
+        await msg.UpdateTodMsgStateAsync(Utils.TodState.Ours, Context);
 
       await RespondAsync();
     }
@@ -146,7 +146,7 @@ namespace LastRaid.Tod
     {
       if (Context.Interaction.TryGetMessage(out var msg))
       {
-        await msg.UpdateTodMsgStateAsync(Utils.TodState.Enemies);
+        await msg.UpdateTodMsgStateAsync(Utils.TodState.Enemies, Context);
       }
 
       await RespondAsync();
@@ -157,7 +157,7 @@ namespace LastRaid.Tod
     {
       if (Context.Interaction.TryGetMessage(out var msg))
       {
-        await msg.UpdateTodMsgStateAsync(Utils.TodState.NoDrop);
+        await msg.UpdateTodMsgStateAsync(Utils.TodState.NoDrop, Context);
       }
 
       await RespondAsync();
@@ -170,8 +170,8 @@ namespace LastRaid.Tod
       {
         if (Context.Interaction.TryGetMessage(out var msg))
         {
-          await msg.UpdateTodMsgStateAsync(Utils.TodState.Dead);
-          await RespondAsync($"**{msg.Embeds.First().Title}** is dead! @everyone");
+          await msg.UpdateTodMsgStateAsync(Utils.TodState.Dead, Context);
+          await RespondAsync($"**{msg.Embeds.First().Title}** is dead! (by {Context.User.Mention}) __Don't forget to start a new /tod__");
         }
       }
       catch (Exception ex)
@@ -185,8 +185,8 @@ namespace LastRaid.Tod
     {
       if (Context.Interaction.TryGetMessage(out var msg))
       {
-        await msg.UpdateTodMsgStateAsync(Utils.TodState.Spawned);
-        await RespondAsync($"**{msg.Embeds.First().Title}** UP UP UP! @everyone FULL DAVAI!");
+        await msg.UpdateTodMsgStateAsync(Utils.TodState.Spawned, Context);
+        await RespondAsync($"**{msg.Embeds.First().Title}** is **UP**! @everyone (by {Context.User.Mention})");
       }
     }
   }

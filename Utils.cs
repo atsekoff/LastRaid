@@ -92,7 +92,7 @@ namespace LastRaid
       return lastKnownTod + diff;
     }
 
-    internal static async Task UpdateTodMsgStateAsync(this IUserMessage msg, TodState state)
+    internal static async Task UpdateTodMsgStateAsync(this IUserMessage msg, TodState state, SocketInteractionContext? context)
     {
       switch (state)
       {
@@ -103,7 +103,7 @@ namespace LastRaid
           {
             mp.Components = new ComponentBuilder().Build();
             mp.Embed = msg.Embeds.First().ToEmbedBuilder()
-              .WithDescription("**Drop for us** Enemies didn't show, did they?")
+              .WithDescription($"**Drop for us** (by {context?.User.Mention})")
               .WithColor(Color.Green).Build();
           });
           break;
@@ -112,7 +112,7 @@ namespace LastRaid
           {
             mp.Components = new ComponentBuilder().Build();
             mp.Embed = msg.Embeds.First().ToEmbedBuilder()
-              .WithDescription("**Drop for enemies** Maybe stop clicking skills with mouse?")
+              .WithDescription($"**Drop for enemies** (by {context?.User.Mention})")
               .WithColor(Color.Red).Build();
           });
           break;
@@ -121,7 +121,7 @@ namespace LastRaid
           {
             mp.Components = new ComponentBuilder().Build();
             mp.Embed = msg.Embeds.First().ToEmbedBuilder()
-              .WithDescription("**No drop** Sacrifice a dwarf next time.")
+              .WithDescription($"**No drop** (by {context?.User.Mention})")
               .WithColor(Color.Blue).Build();
           });
           break;
@@ -130,10 +130,10 @@ namespace LastRaid
           break;
         case TodState.Spawned:
           await msg.ModifyAsync(mp => mp.Components = TodComponentTools.CreateSpawnedComponent().Build());
+          if (msg.TryGetTodEvent(out var e)) _ = e.EndAsync();
           break;
         case TodState.Dead:
           _ = msg.ModifyAsync(mp => mp.Components = new ComponentBuilder().Build());
-          if (msg.TryGetTodEvent(out var e)) _ = e.EndAsync();
           break;
         default:
           throw new InvalidOperationException($"Could not update TOD for state: {state}");

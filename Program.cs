@@ -78,8 +78,8 @@ public class Program
     if (msg is not IUserMessage userMsg) return;
     if (userMsg.TryGetButtonLabeled(SPAWNED_BUTTON_LABEL, out _))
     {
-      await userMsg.UpdateTodMsgStateAsync(TodState.Spawned);
-      await userMsg.ReplyAsync($"**{e.Name}** window has ended! Go kill @everyone");
+      await userMsg.UpdateTodMsgStateAsync(TodState.Spawned, null);
+      await userMsg.ReplyAsync($"**{e.Name}** window has ended!");
     }
   }
 
