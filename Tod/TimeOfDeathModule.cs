@@ -8,34 +8,34 @@ using static LastRaid.EpicsDataConst;
 
 namespace LastRaid.Tod
 {
-  [Group("tod", "Commands for creating RB respawn window reminders.")]
+  [Group(COMMAND_NAME_TOD, COMMAND_DESCRIPTION_TOD)]
   public class TimeOfDeathModule : InteractionModuleBase<SocketInteractionContext>
   {
-    [SlashCommand("relative", "How long ago it died as HH:MM. Max 24 hours ago!")]
+    [SlashCommand(COMMAND_NAME_RELATIVE, COMMAND_DESCRIPTION_RELATIVE)]
     public async Task HandleRelativeTodCommand(BossNames bossName,
-      [Summary("relative-time", "How long since boss death in HH:MM (e.g. 00:25 -> 25 min ago)")]
+      [Summary(PARAM_NAME_RELATIVE_TIME, PARAM_DESCRIPTION_RELATIVE_TIME)]
       DateTime relativeTime,
-      [Summary("Heads-up-time", "Get notified ahead of the window start, in minutes. Default is 30.")]
-      int headsupTime = DEFAULT_HEADSUP_MINUTES)
+      [Summary(PARAM_NAME_HEADS_UP, PARAM_DESCRIPTION_HEADS_UP)]
+      int headsUpMinutes = DEFAULT_HEADSUP_MINUTES)
     {
       var tod = DateTimeOffset.Now.AddHours(-relativeTime.Hour).AddMinutes(-relativeTime.Minute);
-      var headsup = TimeSpan.FromMinutes(headsupTime);
+      var headsup = TimeSpan.FromMinutes(headsUpMinutes);
 
       await HandleTod(bossName, tod, headsup);
     }
 
-    [SlashCommand("exact", "Exact date and time of death.")]
+    [SlashCommand(COMMAND_NAME_EXACT, COMMAND_DESCRIPTION_EXACT)]
     public async Task HandleExactTodCommand(
       BossNames bossName,
-      [Summary("Last-known-time-of-death", "DD.MM.YYYY HH:MM -> Use your local time.")]
+      [Summary(PARAM_NAME_LAST_TOD, PARAM_DESCRIPTION_LAST_TOD)]
       DateTime lastKnownTod,
-      [Summary("Local-time", "DD.MM.YYYY HH:MM -> The date and time shown on your pc clock")]
+      [Summary(PARAM_NAME_USER_TIME, PARAM_DESCRIPTION_USER_TIME)]
       DateTime userTime,
-      [Summary("Heads-up-time", "Get notified ahead of the window start, in minutes. Default is 30.")]
-      int headsUpTime = DEFAULT_HEADSUP_MINUTES)
+      [Summary(PARAM_NAME_HEADS_UP, PARAM_DESCRIPTION_HEADS_UP)]
+      int headsUpMinutes = DEFAULT_HEADSUP_MINUTES)
     {
       var tod = new DateTimeOffset(lastKnownTod.ConvertToLocalDateTime(userTime));
-      var headsup = TimeSpan.FromMinutes(headsUpTime);
+      var headsup = TimeSpan.FromMinutes(headsUpMinutes);
 
       await HandleTod(bossName, tod, headsup);
     }

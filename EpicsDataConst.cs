@@ -47,5 +47,22 @@ namespace LastRaid
 
     public const string BUTTON_LABEL_CONFIRM = "Confirm";
     public const string BUTTON_ID_CONFIRM = "confirmbutton";
+
+    // commands
+    public const string COMMAND_NAME_TOD = "tod";
+    public const string COMMAND_DESCRIPTION_TOD = "Commands for creating RB respawn window reminders.";
+    public const string COMMAND_NAME_RELATIVE = "relative";
+    public const string COMMAND_DESCRIPTION_RELATIVE = "How long ago it died as HH:MM. Max 24 hours ago!";
+    public const string COMMAND_NAME_EXACT = "exact";
+    public const string COMMAND_DESCRIPTION_EXACT = "Exact date and time of death.";
+
+    public const string PARAM_NAME_RELATIVE_TIME = "relative-time";
+    public const string PARAM_DESCRIPTION_RELATIVE_TIME = "How long since boss death in HH:MM (e.g. 00:25 -> 25 min ago)";
+    public const string PARAM_NAME_HEADS_UP = "Heads-up-minutes";
+    public const string PARAM_DESCRIPTION_HEADS_UP = "Get notified ahead of the window start, in minutes. Default is 30.";
+    public const string PARAM_NAME_LAST_TOD = "Last-known-time-of-death";
+    public const string PARAM_DESCRIPTION_LAST_TOD = "[DD/MM/YYYY HH:MM] In your local time.";
+    public const string PARAM_NAME_USER_TIME = "Local-time";
+    public const string PARAM_DESCRIPTION_USER_TIME = "[DD/MM/YYYY HH:MM] Your current local time. (PC clock)";
   }
 }
