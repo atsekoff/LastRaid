@@ -117,7 +117,16 @@ namespace LastRaid.Tod
       }
     }
 
-    [ComponentInteraction(CANCEL_BUTTON_ID, true)]
+    [ComponentInteraction(BUTTON_ID_CONFIRM, true)]
+    public async Task HandleConfirmButton()
+    {
+      if (Context.Interaction.TryGetMessage(out var msg))
+        await msg.UpdateTodMsgStateAsync(Utils.TodState.Confirm, Context);
+
+      await RespondAsync();
+    }
+
+    [ComponentInteraction(BUTTON_ID_CANCEL, true)]
     public async Task HandleCancelButton()
     {
       if (Context.Interaction.TryGetMessage(out var msg))
@@ -131,7 +140,7 @@ namespace LastRaid.Tod
       await RespondAsync();
     }
 
-    [ComponentInteraction(OURS_BUTTON_ID, true)]
+    [ComponentInteraction(BUTTON_ID_OURS, true)]
     public async Task HandleOursButton()
     {
       if (Context.Interaction.TryGetMessage(out var msg))
@@ -141,7 +150,7 @@ namespace LastRaid.Tod
     }
 
 
-    [ComponentInteraction(ENEMIES_BUTTON_ID, true)]
+    [ComponentInteraction(BUTTON_ID_ENEMIES, true)]
     public async Task HandleEnemiesButton()
     {
       if (Context.Interaction.TryGetMessage(out var msg))
@@ -152,7 +161,7 @@ namespace LastRaid.Tod
       await RespondAsync();
     }
 
-    [ComponentInteraction(NODROP_BUTTON_ID, true)]
+    [ComponentInteraction(BUTTON_ID_NO_DROP, true)]
     public async Task HandleNoDropButton()
     {
       if (Context.Interaction.TryGetMessage(out var msg))
@@ -163,7 +172,7 @@ namespace LastRaid.Tod
       await RespondAsync();
     }
 
-    [ComponentInteraction(DEAD_BUTTON_ID, true)]
+    [ComponentInteraction(BUTTON_ID_DEAD, true)]
     public async Task HandleDeadButton()
     {
       try
@@ -180,7 +189,7 @@ namespace LastRaid.Tod
       }
     }
 
-    [ComponentInteraction(SPAWNED_BUTTON_ID, true)]
+    [ComponentInteraction(BUTTON_ID_SPAWNED, true)]
     public async Task HandleSpawnedButton()
     {
       if (Context.Interaction.TryGetMessage(out var msg))

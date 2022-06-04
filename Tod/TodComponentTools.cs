@@ -8,10 +8,16 @@ namespace LastRaid.Tod
     internal static ComponentBuilder CreateInitialTodComponent()
     {
       return new ComponentBuilder()
+        .WithButton(CreateConfirmButton())
+        .WithButton(CreateCancelButton());
+    }
+
+    internal static ComponentBuilder CreateDropComponent()
+    {
+      return new ComponentBuilder()
         .WithButton(CreateOursButton())
         .WithButton(CreateEnemiesButton())
-        .WithButton(CreateNoDropButton())
-        .WithButton(CreateCancelButton());
+        .WithButton(CreateNoDropButton());
     }
 
     internal static ComponentBuilder CreateWindowStartedComponent()
@@ -26,34 +32,39 @@ namespace LastRaid.Tod
         .WithButton(CreateDeadButton());
     }
 
+    private static ButtonBuilder CreateConfirmButton()
+    {
+      return new ButtonBuilder(BUTTON_LABEL_CONFIRM, BUTTON_ID_CONFIRM, ButtonStyle.Success);
+    }
+
     private static ButtonBuilder CreateOursButton()
     {
-      return new ButtonBuilder(OURS_BUTTON_LABEL, OURS_BUTTON_ID, ButtonStyle.Success);
+      return new ButtonBuilder(BUTTON_LABEL_OURS, BUTTON_ID_OURS, ButtonStyle.Success);
     }
 
     private static ButtonBuilder CreateEnemiesButton()
     {
-      return new ButtonBuilder(ENEMIES_BUTTON_LABEL, ENEMIES_BUTTON_ID, ButtonStyle.Danger);
+      return new ButtonBuilder(BUTTON_LABEL_ENEMIES, BUTTON_ID_ENEMIES, ButtonStyle.Danger);
     }
 
     private static ButtonBuilder CreateNoDropButton()
     {
-      return new ButtonBuilder(NODROP_BUTTON_LABEL, NODROP_BUTTON_ID, ButtonStyle.Primary);
+      return new ButtonBuilder(BUTTON_LABEL_NO_DROP, BUTTON_ID_NO_DROP, ButtonStyle.Primary);
     }
 
     private static ButtonBuilder CreateCancelButton()
     {
-      return new ButtonBuilder(CANCEL_BUTTON_LABEL, CANCEL_BUTTON_ID, ButtonStyle.Secondary);
+      return new ButtonBuilder(BUTTON_LABEL_CANCEL, BUTTON_ID_CANCEL, ButtonStyle.Secondary);
     }
 
     private static ButtonBuilder CreateDeadButton()
     {
-      return new ButtonBuilder(DEAD_BUTTON_LABEL, DEAD_BUTTON_ID, ButtonStyle.Primary);
+      return new ButtonBuilder(BUTTON_LABEL_DEAD, BUTTON_ID_DEAD, ButtonStyle.Primary);
     }
 
     private static ButtonBuilder CreateSpawnedButton()
     {
-      return new ButtonBuilder(SPAWNED_BUTTON_LABEL, SPAWNED_BUTTON_ID, ButtonStyle.Success);
+      return new ButtonBuilder(BUTTON_LABEL_SPAWNED, BUTTON_ID_SPAWNED, ButtonStyle.Success);
     }
   }
 }

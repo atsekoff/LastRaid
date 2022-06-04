@@ -12,7 +12,7 @@ namespace LastRaid
 {
   internal static class Utils
   {
-    internal enum TodState { Initial, Ours, Enemies, NoDrop, Started, Spawned, Dead }
+    internal enum TodState { Initial, Confirm, Ours, Enemies, NoDrop, Started, Spawned, Dead }
     internal static string GetUrl(this IGuildScheduledEvent e)
     {
       return $"https://discord.com/events/{e.Guild.Id}/{e.Id}";
@@ -98,6 +98,9 @@ namespace LastRaid
       {
         case TodState.Initial:
           throw new InvalidOperationException("InitialState should only be created using the TodReminder constructor");
+        case TodState.Confirm:
+          await msg.ModifyAsync(mp => mp.Components = TodComponentTools.CreateDropComponent().Build());
+          break;
         case TodState.Ours:
           await msg.ModifyAsync(mp =>
           {

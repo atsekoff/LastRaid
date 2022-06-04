@@ -26,18 +26,26 @@ namespace LastRaid
       "https://lineage.pmfun.com/data/img/etc_imperial_scepter_i02.png",
       "https://lineage.pmfun.com/data/img/etc_imperial_scepter_i01.png" };
 
-    // component
-    public const string CANCEL_BUTTON_LABEL = "Cancel";
-    public const string CANCEL_BUTTON_ID = "cancelbutton";
-    public const string OURS_BUTTON_LABEL = "Ours";
-    public const string OURS_BUTTON_ID = "oursbutton";
-    public const string ENEMIES_BUTTON_LABEL = "Enemies";
-    public const string ENEMIES_BUTTON_ID = "enemiesbutton";
-    public const string NODROP_BUTTON_LABEL = "No drop";
-    public const string NODROP_BUTTON_ID = "nodropbutton";
-    public const string DEAD_BUTTON_LABEL = "Dead";
-    public const string DEAD_BUTTON_ID = "deadbutton";
-    public const string SPAWNED_BUTTON_LABEL = "Spawned";
-    public const string SPAWNED_BUTTON_ID = "spawnedbutton";
+    // buttons
+    public const string BUTTON_LABEL_CANCEL = "Cancel";
+    public const string BUTTON_ID_CANCEL = "cancelbutton";
+
+    public const string BUTTON_LABEL_OURS = "Ours";
+    public const string BUTTON_ID_OURS = "oursbutton";
+
+    public const string BUTTON_LABEL_ENEMIES = "Enemies";
+    public const string BUTTON_ID_ENEMIES = "enemiesbutton";
+
+    public const string BUTTON_LABEL_NO_DROP = "No drop";
+    public const string BUTTON_ID_NO_DROP = "nodropbutton";
+
+    public const string BUTTON_LABEL_DEAD = "Dead";
+    public const string BUTTON_ID_DEAD = "deadbutton";
+
+    public const string BUTTON_LABEL_SPAWNED = "Spawned";
+    public const string BUTTON_ID_SPAWNED = "spawnedbutton";
+
+    public const string BUTTON_LABEL_CONFIRM = "Confirm";
+    public const string BUTTON_ID_CONFIRM = "confirmbutton";
   }
 }
