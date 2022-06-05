@@ -12,7 +12,7 @@ namespace LastRaid
 {
   internal static class Utils
   {
-    internal enum TodState { Initial, Confirm, Ours, Enemies, NoDrop, Started, Spawned, Dead }
+    internal enum TodState { Initial, Confirm, Ours, Enemies, NoDrop, Started }
     internal static string GetUrl(this IGuildScheduledEvent e)
     {
       return $"https://discord.com/events/{e.Guild.Id}/{e.Id}";
@@ -129,14 +129,7 @@ namespace LastRaid
           });
           break;
         case TodState.Started:
-          await msg.ModifyAsync(mp => mp.Components = TodComponentTools.CreateWindowStartedComponent().Build());
-          break;
-        case TodState.Spawned:
-          await msg.ModifyAsync(mp => mp.Components = TodComponentTools.CreateSpawnedComponent().Build());
-          if (msg.TryGetTodEvent(out var e)) _ = e.EndAsync();
-          break;
-        case TodState.Dead:
-          _ = msg.ModifyAsync(mp => mp.Components = new ComponentBuilder().Build());
+          //await msg.ModifyAsync(mp => mp.Components = TodComponentTools.CreateWindowStartedComponent().Build());
           break;
         default:
           throw new InvalidOperationException($"Could not update TOD for state: {state}");

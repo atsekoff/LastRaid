@@ -20,18 +20,6 @@ namespace LastRaid.Tod
         .WithButton(CreateNoDropButton());
     }
 
-    internal static ComponentBuilder CreateWindowStartedComponent()
-    {
-      return new ComponentBuilder()
-        .WithButton(CreateSpawnedButton());
-    }
-
-    internal static ComponentBuilder CreateSpawnedComponent()
-    {
-      return new ComponentBuilder()
-        .WithButton(CreateDeadButton());
-    }
-
     private static ButtonBuilder CreateConfirmButton()
     {
       return new ButtonBuilder(BUTTON_LABEL_CONFIRM, BUTTON_ID_CONFIRM, ButtonStyle.Success);
@@ -55,16 +43,6 @@ namespace LastRaid.Tod
     private static ButtonBuilder CreateCancelButton()
     {
       return new ButtonBuilder(BUTTON_LABEL_CANCEL, BUTTON_ID_CANCEL, ButtonStyle.Secondary);
-    }
-
-    private static ButtonBuilder CreateDeadButton()
-    {
-      return new ButtonBuilder(BUTTON_LABEL_DEAD, BUTTON_ID_DEAD, ButtonStyle.Primary);
-    }
-
-    private static ButtonBuilder CreateSpawnedButton()
-    {
-      return new ButtonBuilder(BUTTON_LABEL_SPAWNED, BUTTON_ID_SPAWNED, ButtonStyle.Success);
     }
   }
 }

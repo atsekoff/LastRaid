@@ -8,8 +8,6 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using static LastRaid.EpicsDataConst;
-using static LastRaid.Utils;
 
 namespace LastRaid;
 
@@ -55,7 +53,6 @@ public class Program
     var client = provider.GetRequiredService<DiscordSocketClient>();
     client.Log += OnClientLog;
     client.GuildScheduledEventStarted += async (SocketGuildEvent e) => await OnEventStarted(e);
-    client.GuildScheduledEventCompleted += async (SocketGuildEvent e) => await OnEventCompleted(e);
     client.GuildAvailable += async (SocketGuild g) => await slashCommands.RegisterCommandsToGuildAsync(g.Id, true);
 
 #if DEBUG
@@ -68,36 +65,17 @@ public class Program
     await Task.Delay(-1);
   }
 
-  private static async Task OnEventCompleted(SocketGuildEvent e)
-  {
-    ulong channelId = TodEventTools.GetChannelId(e);
-    SocketTextChannel channel = e.Guild.GetTextChannel(channelId);
-    ulong msgId = TodEventTools.GetMsgId(e);
-    IMessage msg = await channel.GetMessageAsync(msgId);
-
-    if (msg is not IUserMessage userMsg) return;
-    if (userMsg.TryGetButtonLabeled(BUTTON_LABEL_SPAWNED, out _))
-    {
-      await userMsg.UpdateTodMsgStateAsync(TodState.Spawned, null);
-      await userMsg.ReplyAsync($"**{e.Name}** window has ended!");
-    }
-  }
-
   private static async Task OnEventStarted(SocketGuildEvent e)
   {
-    ulong channelId = TodEventTools.GetChannelId(e);
+    ulong channelId = TodEventTools.GetIdFromLocation(e, 0);
     SocketTextChannel channel = e.Guild.GetTextChannel(channelId);
-    ulong msgId = TodEventTools.GetMsgId(e);
+    ulong msgId = TodEventTools.GetIdFromLocation(e, 1);
     IMessage msg = await channel.GetMessageAsync(msgId);
 
     if (msg is not IUserMessage userMsg) return;
 
     string startDescription = e.Description.Split('\n').First();
     _ = userMsg.ReplyAsync($"**{e.Name}** window {startDescription} @everyone");
-    _ = userMsg.ModifyAsync(mp =>
-    {
-      mp.Components = TodComponentTools.CreateWindowStartedComponent().Build();
-    });
   }
 
 

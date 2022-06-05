@@ -8,6 +8,7 @@ namespace LastRaid
     public const int DEFAULT_HEADSUP_MINUTES = 30;
 
     // rb data
+    // IMPORTANT the enum int values are used to index the arrays, ensure they are ordered correctly
     public enum BossNames { QueenAnt, Core, Orfen, Zaken, Baium, Antharas, Valakas, Frintezza, Barakiel, Cabrio, Hallate, Kernon, Golkonda }
     public static readonly int[] DEATH_DURATIONS = { 24, 30, 30, 40, 120, 192, 264, 48, 12, 12, 12, 12, 12 };
     public static readonly int[] WINDOW_DURATIONS = { 6, 6, 6, 8, 8, 8, 0, 2, 24, 24, 24, 24, 24 };
@@ -38,12 +39,6 @@ namespace LastRaid
 
     public const string BUTTON_LABEL_NO_DROP = "No drop";
     public const string BUTTON_ID_NO_DROP = "nodropbutton";
-
-    public const string BUTTON_LABEL_DEAD = "Dead";
-    public const string BUTTON_ID_DEAD = "deadbutton";
-
-    public const string BUTTON_LABEL_SPAWNED = "Spawned";
-    public const string BUTTON_ID_SPAWNED = "spawnedbutton";
 
     public const string BUTTON_LABEL_CONFIRM = "Confirm";
     public const string BUTTON_ID_CONFIRM = "confirmbutton";

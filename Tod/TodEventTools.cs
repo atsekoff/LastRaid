@@ -25,7 +25,7 @@ namespace LastRaid.Tod
         name: bossName.ToString(),
         startTime: eventStartTime,
         type: GuildScheduledEventType.External,
-        endTime: windowEndTime,
+        endTime: windowEndTime.AddHours(DEATH_DURATIONS[(int)bossName]),
         location: $"{context.Channel.Id}",
         description:
           $"Start: **{TimestampTag.FromDateTimeOffset(windowStartTime, TimestampTagStyles.Relative)}** " +
@@ -39,14 +39,16 @@ namespace LastRaid.Tod
       return $"{channelId}{_separator}{msgId}";
     }
 
-    internal static ulong GetChannelId(SocketGuildEvent e)
+    /// <summary>
+    /// This requires that discord IDs are written down in the 'location' property of the event.
+    /// </summary>
+    /// <param name="e">The discord guild event.</param>
+    /// <param name="index">The index of the id written in the Location property</param>
+    /// <returns>Discord Id</returns>
+    /// <remarks>By default the separator used is a comma ','</remarks>
+    internal static ulong GetIdFromLocation(SocketGuildEvent e, int index, char separator = _separator)
     {
-      return ulong.Parse(e.Location.Split(_separator)[0]);
-    }
-
-    internal static ulong GetMsgId(SocketGuildEvent e)
-    {
-      return ulong.Parse(e.Location.Split(_separator)[1]);
+      return ulong.Parse(e.Location.Split(separator)[index]);
     }
   }
 }

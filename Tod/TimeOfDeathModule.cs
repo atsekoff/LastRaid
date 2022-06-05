@@ -171,32 +171,5 @@ namespace LastRaid.Tod
 
       await RespondAsync();
     }
-
-    [ComponentInteraction(BUTTON_ID_DEAD, true)]
-    public async Task HandleDeadButton()
-    {
-      try
-      {
-        if (Context.Interaction.TryGetMessage(out var msg))
-        {
-          await msg.UpdateTodMsgStateAsync(Utils.TodState.Dead, Context);
-          await RespondAsync($"**{msg.Embeds.First().Title}** is dead! (by {Context.User.Mention}) __Don't forget to start a new /tod__");
-        }
-      }
-      catch (Exception ex)
-      {
-        await RespondAsync(ex.Message, ephemeral: true);
-      }
-    }
-
-    [ComponentInteraction(BUTTON_ID_SPAWNED, true)]
-    public async Task HandleSpawnedButton()
-    {
-      if (Context.Interaction.TryGetMessage(out var msg))
-      {
-        await msg.UpdateTodMsgStateAsync(Utils.TodState.Spawned, Context);
-        await RespondAsync($"**{msg.Embeds.First().Title}** is **UP**! @everyone (by {Context.User.Mention})");
-      }
-    }
   }
 }
