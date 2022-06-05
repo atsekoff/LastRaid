@@ -43,6 +43,9 @@ namespace LastRaid
     public const string BUTTON_LABEL_CONFIRM = "Confirm";
     public const string BUTTON_ID_CONFIRM = "confirmbutton";
 
+    public const string BUTTON_LABEL_OVERRIDE = "Override";
+    public const string BUTTON_ID_OVERRIDE = "overridebutton";
+
     // commands
     public const string COMMAND_NAME_TOD = "tod";
     public const string COMMAND_DESCRIPTION_TOD = "Commands for creating RB respawn window reminders.";

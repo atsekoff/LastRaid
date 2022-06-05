@@ -1,5 +1,6 @@
 ﻿using Discord.Interactions;
 using Discord.WebSocket;
+using LastRaid.Tod.Modules;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -21,7 +22,8 @@ namespace LastRaid
 
     public async Task InitializeAsync()
     {
-      await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
+      await _commands.AddModuleAsync<TodButtonsModule>(_services);
+      await _commands.AddModuleAsync<TodCommandsModule>(_services);
       _client.InteractionCreated += OnInteractionCreated;
     }
 
@@ -36,6 +38,9 @@ namespace LastRaid
       }
       catch (Exception e)
       {
+#if DEBUG
+        await interaction.RespondAsync($":bangbang: {e.Message}", ephemeral: true);
+#endif
         Console.WriteLine(e.Message);
       }
     }

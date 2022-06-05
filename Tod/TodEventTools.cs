@@ -9,7 +9,7 @@ namespace LastRaid.Tod
 {
   internal static class TodEventTools
   {
-    private const char _separator = ',';
+    private const char _SEPARATOR = ',';
     internal static async Task<IGuildScheduledEvent> CreateTodEvent(SocketInteractionContext context, BossNames bossName, DateTimeOffset windowStartTime, DateTimeOffset windowEndTime, TimeSpan headsupTime)
     {
       bool isWindowStarted = windowStartTime <= DateTimeOffset.Now;
@@ -36,7 +36,7 @@ namespace LastRaid.Tod
 
     internal static string BuildMetadata(ulong channelId, ulong msgId)
     {
-      return $"{channelId}{_separator}{msgId}";
+      return $"{channelId}{_SEPARATOR}{msgId}";
     }
 
     /// <summary>
@@ -45,8 +45,7 @@ namespace LastRaid.Tod
     /// <param name="e">The discord guild event.</param>
     /// <param name="index">The index of the id written in the Location property</param>
     /// <returns>Discord Id</returns>
-    /// <remarks>By default the separator used is a comma ','</remarks>
-    internal static ulong GetIdFromLocation(SocketGuildEvent e, int index, char separator = _separator)
+    internal static ulong GetIdFromLocation(SocketGuildEvent e, int index, char separator = _SEPARATOR)
     {
       return ulong.Parse(e.Location.Split(separator)[index]);
     }

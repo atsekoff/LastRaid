@@ -1,4 +1,5 @@
 ﻿using Discord;
+using System;
 using static LastRaid.EpicsDataConst;
 
 namespace LastRaid.Tod
@@ -18,6 +19,18 @@ namespace LastRaid.Tod
         .WithButton(CreateOursButton())
         .WithButton(CreateEnemiesButton())
         .WithButton(CreateNoDropButton());
+    }
+
+    internal static ComponentBuilder CreateExistingEventComponent(ulong eventId, BossNames bossName, DateTimeOffset tod, TimeSpan headsupTime)
+    {
+      return new ComponentBuilder()
+        .WithButton(CreateOverrideButton(eventId.ToString(), bossName.ToString(), tod.ToUnixTimeSeconds().ToString(), headsupTime.Ticks.ToString()));
+    }
+
+    private static ButtonBuilder CreateOverrideButton(string eventId, string bossName, string todUnixSec, string headsupTicks)
+    {
+      string customId = $"{BUTTON_ID_OVERRIDE}:{eventId},{bossName},{todUnixSec},{headsupTicks}";
+      return new ButtonBuilder(BUTTON_LABEL_OVERRIDE, customId, ButtonStyle.Danger);
     }
 
     private static ButtonBuilder CreateConfirmButton()

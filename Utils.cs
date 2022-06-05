@@ -52,7 +52,7 @@ namespace LastRaid
       return e != null;
     }
 
-    internal static bool TryGetTodEvent(this SocketInteractionContext context, BossNames bossName, [NotNullWhen(true)] out IGuildScheduledEvent? @event)
+    internal static bool TryGetTodEvent(this SocketInteractionContext context, BossNames bossName, [NotNullWhen(true)] out SocketGuildEvent? @event)
     {
       @event = context.Guild.Events.FirstOrDefault(e =>
         e.Name == bossName.ToString() &&
