@@ -1,5 +1,7 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using static LastRaid.EpicsDataConst;
 
@@ -26,7 +28,7 @@ namespace LastRaid.Tod.Modules
     public async Task HandleConfirmButton()
     {
       if (Context.Interaction.TryGetMessage(out var msg))
-        await msg.UpdateTodMsgStateAsync(Utils.TodState.Confirm, Context);
+        await msg.RemoveAllComponentsAsync();
 
       await RespondAsync();
     }
@@ -49,7 +51,15 @@ namespace LastRaid.Tod.Modules
     public async Task HandleOursButton()
     {
       if (Context.Interaction.TryGetMessage(out var msg))
-        await msg.UpdateTodMsgStateAsync(Utils.TodState.Ours, Context);
+      {
+        await msg.ModifyAsync(mp =>
+        {
+          mp.Components = TodComponentTools.CreateConfirmTodComponent().Build();
+          mp.Embed = msg.Embeds.First().ToEmbedBuilder()
+            .WithDescription($"**Drop for us** (by {Context.User.Mention})")
+            .WithColor(Color.Green).Build();
+        });
+      }
 
       await RespondAsync();
     }
@@ -60,7 +70,13 @@ namespace LastRaid.Tod.Modules
     {
       if (Context.Interaction.TryGetMessage(out var msg))
       {
-        await msg.UpdateTodMsgStateAsync(Utils.TodState.Enemies, Context);
+        await msg.ModifyAsync(mp =>
+        {
+          mp.Components = TodComponentTools.CreateConfirmTodComponent().Build();
+          mp.Embed = msg.Embeds.First().ToEmbedBuilder()
+            .WithDescription($"**Drop for enemies** (by {Context.User.Mention})")
+            .WithColor(Color.Red).Build();
+        });
       }
 
       await RespondAsync();
@@ -71,7 +87,13 @@ namespace LastRaid.Tod.Modules
     {
       if (Context.Interaction.TryGetMessage(out var msg))
       {
-        await msg.UpdateTodMsgStateAsync(Utils.TodState.NoDrop, Context);
+        await msg.ModifyAsync(mp =>
+        {
+          mp.Components = TodComponentTools.CreateConfirmTodComponent().Build();
+          mp.Embed = msg.Embeds.First().ToEmbedBuilder()
+            .WithDescription($"**No drop** (by {Context.User.Mention})")
+            .WithColor(Color.Blue).Build();
+        });
       }
 
       await RespondAsync();

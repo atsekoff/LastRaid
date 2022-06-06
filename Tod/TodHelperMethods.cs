@@ -3,9 +3,6 @@ using Discord.Interactions;
 using Discord.Rest;
 using Discord.WebSocket;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static LastRaid.EpicsDataConst;
 
@@ -74,7 +71,7 @@ namespace LastRaid.Tod
     {
       try
       {
-        var component = TodComponentTools.CreateInitialTodComponent();
+        var component = TodComponentTools.CreateDropComponent();
         IGuildScheduledEvent? e = await TodEventTools.CreateTodEvent(context, bossName, windowStartTime, windowEndTime, headsupTime);
 
         try

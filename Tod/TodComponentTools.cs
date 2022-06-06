@@ -6,7 +6,7 @@ namespace LastRaid.Tod
 {
   internal class TodComponentTools
   {
-    internal static ComponentBuilder CreateInitialTodComponent()
+    internal static ComponentBuilder CreateConfirmTodComponent()
     {
       return new ComponentBuilder()
         .WithButton(CreateConfirmButton())

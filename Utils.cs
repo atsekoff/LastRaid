@@ -12,7 +12,6 @@ namespace LastRaid
 {
   internal static class Utils
   {
-    internal enum TodState { Initial, Confirm, Ours, Enemies, NoDrop, Started }
     internal static string GetUrl(this IGuildScheduledEvent e)
     {
       return $"https://discord.com/events/{e.Guild.Id}/{e.Id}";
@@ -92,48 +91,9 @@ namespace LastRaid
       return lastKnownTod + diff;
     }
 
-    internal static async Task UpdateTodMsgStateAsync(this IUserMessage msg, TodState state, SocketInteractionContext? context)
+    internal static async Task RemoveAllComponentsAsync(this IUserMessage msg)
     {
-      switch (state)
-      {
-        case TodState.Initial:
-          throw new InvalidOperationException("InitialState should only be created using the TodReminder constructor");
-        case TodState.Confirm:
-          await msg.ModifyAsync(mp => mp.Components = TodComponentTools.CreateDropComponent().Build());
-          break;
-        case TodState.Ours:
-          await msg.ModifyAsync(mp =>
-          {
-            mp.Components = new ComponentBuilder().Build();
-            mp.Embed = msg.Embeds.First().ToEmbedBuilder()
-              .WithDescription($"**Drop for us** (by {context?.User.Mention})")
-              .WithColor(Color.Green).Build();
-          });
-          break;
-        case TodState.Enemies:
-          await msg.ModifyAsync(mp =>
-          {
-            mp.Components = new ComponentBuilder().Build();
-            mp.Embed = msg.Embeds.First().ToEmbedBuilder()
-              .WithDescription($"**Drop for enemies** (by {context?.User.Mention})")
-              .WithColor(Color.Red).Build();
-          });
-          break;
-        case TodState.NoDrop:
-          await msg.ModifyAsync(mp =>
-          {
-            mp.Components = new ComponentBuilder().Build();
-            mp.Embed = msg.Embeds.First().ToEmbedBuilder()
-              .WithDescription($"**No drop** (by {context?.User.Mention})")
-              .WithColor(Color.Blue).Build();
-          });
-          break;
-        case TodState.Started:
-          //await msg.ModifyAsync(mp => mp.Components = TodComponentTools.CreateWindowStartedComponent().Build());
-          break;
-        default:
-          throw new InvalidOperationException($"Could not update TOD for state: {state}");
-      }
+      await msg.ModifyAsync(mp => mp.Components = new ComponentBuilder().Build());
     }
   }
 }
