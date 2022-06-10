@@ -25,6 +25,7 @@ namespace LastRaid
       await _commands.AddModuleAsync<TodButtonsModule>(_services);
       await _commands.AddModuleAsync<TodCommandsModule>(_services);
       _client.InteractionCreated += OnInteractionCreated;
+      _commands.InteractionExecuted += OnCommandsInteractionExecuted;
     }
 
     private async Task OnInteractionCreated(SocketInteraction interaction)
@@ -38,11 +39,23 @@ namespace LastRaid
       }
       catch (Exception e)
       {
-#if DEBUG
         await interaction.RespondAsync($":bangbang: {e.Message}", ephemeral: true);
-#endif
         Console.WriteLine(e.Message);
       }
+    }
+
+    private Task OnCommandsInteractionExecuted(ICommandInfo cmdInfo, Discord.IInteractionContext context, IResult result)
+    {
+      Console.WriteLine();
+
+      if (!result.IsSuccess)
+        Console.WriteLine($"{cmdInfo.Name} (by {context.User}): {result.ErrorReason}");
+      else
+        Console.WriteLine($"{cmdInfo.Name} (by {context.User})");
+
+      Console.WriteLine();
+
+      return Task.CompletedTask;
     }
   }
 }
