@@ -29,8 +29,6 @@ namespace LastRaid.Tod.Modules
     {
       if (Context.Interaction.TryGetMessage(out var msg))
         await msg.RemoveAllComponentsAsync();
-
-      await RespondAsync();
     }
 
     [ComponentInteraction(BUTTON_ID_CANCEL, true)]
@@ -38,13 +36,11 @@ namespace LastRaid.Tod.Modules
     {
       if (Context.Interaction.TryGetMessage(out var msg))
       {
-        _ = msg.DeleteAsync();
+        await msg.DeleteAsync();
 
         if (msg.TryGetTodEvent(out var e))
-          _ = e.DeleteAsync();
+          await e.DeleteAsync();
       }
-
-      await RespondAsync();
     }
 
     [ComponentInteraction(BUTTON_ID_OURS, true)]
@@ -60,8 +56,6 @@ namespace LastRaid.Tod.Modules
             .WithColor(Color.Green).Build();
         });
       }
-
-      await RespondAsync();
     }
 
 
@@ -78,8 +72,6 @@ namespace LastRaid.Tod.Modules
             .WithColor(Color.Red).Build();
         });
       }
-
-      await RespondAsync();
     }
 
     [ComponentInteraction(BUTTON_ID_NO_DROP, true)]
@@ -95,8 +87,6 @@ namespace LastRaid.Tod.Modules
             .WithColor(Color.Blue).Build();
         });
       }
-
-      await RespondAsync();
     }
   }
 }

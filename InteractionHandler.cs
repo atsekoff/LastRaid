@@ -2,7 +2,6 @@
 using Discord.WebSocket;
 using LastRaid.Tod.Modules;
 using System;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace LastRaid
@@ -25,7 +24,7 @@ namespace LastRaid
       await _commands.AddModuleAsync<TodButtonsModule>(_services);
       await _commands.AddModuleAsync<TodCommandsModule>(_services);
       _client.InteractionCreated += OnInteractionCreated;
-      _commands.InteractionExecuted += OnCommandsInteractionExecuted;
+      _commands.InteractionExecuted += OnInteractionExecuted;
     }
 
     private async Task OnInteractionCreated(SocketInteraction interaction)
@@ -44,7 +43,7 @@ namespace LastRaid
       }
     }
 
-    private Task OnCommandsInteractionExecuted(ICommandInfo cmdInfo, Discord.IInteractionContext context, IResult result)
+    private async Task OnInteractionExecuted(ICommandInfo cmdInfo, Discord.IInteractionContext context, IResult result)
     {
       Console.WriteLine();
 
@@ -55,7 +54,8 @@ namespace LastRaid
 
       Console.WriteLine();
 
-      return Task.CompletedTask;
+      if (!context.Interaction.HasResponded)
+        await context.Interaction.DeferAsync(ephemeral: true);
     }
   }
 }
