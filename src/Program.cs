@@ -15,6 +15,9 @@ public class Program
 {
   public static async Task Main()
   {
+    // enforce EU formatting regardless of where the bot is hosted
+    System.Globalization.CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.GetCultureInfo("en-NL");
+
     var config = new ConfigurationBuilder()
       .SetBasePath(AppContext.BaseDirectory)
       .AddJsonFile("config.json")
