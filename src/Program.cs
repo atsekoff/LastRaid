@@ -37,7 +37,9 @@ public class Program
           GatewayIntents = GatewayIntents.GuildScheduledEvents | GatewayIntents.Guilds,
           LogGatewayIntentWarnings = true,
         }))
-        .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
+        .AddSingleton(x => new InteractionService(
+          x.GetRequiredService<DiscordSocketClient>(),
+          new InteractionServiceConfig { LogLevel = LogSeverity.Debug}))
         .AddSingleton<InteractionHandler>()
         )
       .Build();
@@ -55,6 +57,7 @@ public class Program
 
     var client = provider.GetRequiredService<DiscordSocketClient>();
     client.Log += OnClientLog;
+    slashCommands.Log += OnCommandLog;
     client.GuildScheduledEventStarted += async (SocketGuildEvent e) => await OnEventStarted(e);
     client.GuildAvailable += async (SocketGuild g) => await slashCommands.RegisterCommandsToGuildAsync(g.Id, true);
 
@@ -81,8 +84,12 @@ public class Program
     _ = userMsg.ReplyAsync($"**{e.Name}** window {startDescription} @everyone");
   }
 
-
   public static Task OnClientLog(LogMessage msg)
+  {
+    return Task.Run(() => Console.WriteLine(msg));
+  }
+
+  private static Task OnCommandLog(LogMessage msg)
   {
     return Task.Run(() => Console.WriteLine(msg));
   }

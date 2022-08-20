@@ -1,4 +1,5 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 using LastRaid.Tod.Modules;
 using System;
@@ -43,19 +44,14 @@ namespace LastRaid
       }
     }
 
-    private async Task OnInteractionExecuted(ICommandInfo cmdInfo, Discord.IInteractionContext context, IResult result)
+    private async Task OnInteractionExecuted(ICommandInfo cmdInfo, IInteractionContext context, IResult result)
     {
-      Console.WriteLine();
+      if (context.Interaction.HasResponded) return;
 
-      if (!result.IsSuccess)
-        Console.WriteLine($"{cmdInfo.Name} (by {context.User}): {result.ErrorReason}");
+      if (result.IsSuccess)
+        await context.Interaction.DeferAsync();
       else
-        Console.WriteLine($"{cmdInfo.Name} (by {context.User})");
-
-      Console.WriteLine();
-
-      if (!context.Interaction.HasResponded)
-        await context.Interaction.DeferAsync(ephemeral: true);
+        await context.Interaction.RespondAsync($"{cmdInfo.Name}: {result.ErrorReason}", ephemeral: true);
     }
   }
 }
