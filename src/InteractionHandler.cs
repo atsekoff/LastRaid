@@ -34,8 +34,6 @@ namespace LastRaid
       {
         var context = new SocketInteractionContext(_client, interaction);
         var result = await _commands.ExecuteCommandAsync(context, _services);
-        if (!result.IsSuccess)
-          await interaction.RespondAsync($":x: {result.ErrorReason}", ephemeral: true);
       }
       catch (Exception e)
       {
@@ -51,7 +49,7 @@ namespace LastRaid
       if (result.IsSuccess)
         await context.Interaction.DeferAsync();
       else
-        await context.Interaction.RespondAsync($"{cmdInfo.Name}: {result.ErrorReason}", ephemeral: true);
+        await context.Interaction.RespondAsync($":x: Command: {cmdInfo} :x:\n{result.ErrorReason}", ephemeral: true);
     }
   }
 }
