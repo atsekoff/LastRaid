@@ -38,7 +38,7 @@ namespace LastRaid
       catch (Exception e)
       {
         await interaction.RespondAsync($":bangbang: {e.Message}", ephemeral: true);
-        Console.WriteLine(e.Message);
+        Console.WriteLine($"OnInteractionCreated\n{e.Message}");
       }
     }
 
@@ -49,7 +49,11 @@ namespace LastRaid
       if (result.IsSuccess)
         await context.Interaction.DeferAsync();
       else
-        await context.Interaction.RespondAsync($":x: Command: {cmdInfo} :x:\n{result.ErrorReason}", ephemeral: true);
+      {
+        string msg = $":x: Command: {cmdInfo} :x:\n{result.ErrorReason}";
+        await context.Interaction.RespondAsync(msg, ephemeral: true);
+        Console.WriteLine($"OnInteractionExecuted\n{msg}");
+      }
     }
   }
 }
