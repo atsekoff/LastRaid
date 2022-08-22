@@ -10,8 +10,8 @@ namespace LastRaid
     // rb data
     // IMPORTANT the enum int values are used to index the arrays, ensure they are ordered correctly
     public enum BossNames { QueenAnt, Core, Orfen, Zaken, Baium, Antharas, Valakas, Frintezza, Barakiel, Cabrio, Hallate, Kernon, Golkonda, LilithAnakim }
-    public static readonly int[] DEATH_DURATIONS = { 24, 30, 30, 40, 120, 192, 264, 48, 12, 12, 12, 12, 12, 12 };
-    public static readonly int[] WINDOW_DURATIONS = { 6, 6, 6, 8, 8, 8, 0, 2, 24, 24, 24, 24, 24, 24 };
+    public static readonly int[] DEATH_DURATIONS = { 24, 36, 36, 48, 124, 196, 268, 48, 18, 18, 18, 18, 18, 18 };
+    public static readonly int[] WINDOW_DURATIONS = { 4,  4,  4,  4,   4,   4,   4,  4,  9,  9,  9,  9,  9,  9 };
     public static readonly string[] EPIC_THUMBNAILS = {
       "https://lineage.pmfun.com/data/img/accessory_ring_of_queen_ant_i00.png",
       "https://lineage.pmfun.com/data/img/accessory_ring_of_core_i00.png",
