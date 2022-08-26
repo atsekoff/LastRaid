@@ -9,9 +9,9 @@ namespace LastRaid
 
     // rb data
     // IMPORTANT the enum int values are used to index the arrays, ensure they are ordered correctly
-    public enum BossNames { QueenAnt, Core, Orfen, Zaken, Baium, Antharas, Valakas, Frintezza, Barakiel, Cabrio, Hallate, Kernon, Golkonda, LilithAnakim }
-    public static readonly int[] DEATH_DURATIONS = { 24, 36, 36, 48, 124, 196, 268, 48, 18, 18, 18, 18, 18, 18 };
-    public static readonly int[] WINDOW_DURATIONS = { 4,  4,  4,  4,   4,   4,   4,  4,  9,  9,  9,  9,  9,  9 };
+    public enum BossNames { QueenAnt, Core, Orfen, Zaken, Baium, Antharas, Valakas, Frintezza, Barakiel, LilithAnakim }
+    public static readonly int[] DEATH_DURATIONS = { 24, 36, 36, 48, 124, 196, 268, 48, 18, 18 };
+    public static readonly int[] WINDOW_DURATIONS = { 4,  4,  4,  4,   4,   4,   4,  4,  9,  9 };
     public static readonly string[] EPIC_THUMBNAILS = {
       "https://lineage.pmfun.com/data/img/accessory_ring_of_queen_ant_i00.png",
       "https://lineage.pmfun.com/data/img/accessory_ring_of_core_i00.png",
@@ -22,10 +22,6 @@ namespace LastRaid
       "https://lineage.pmfun.com/data/img/accessory_necklace_of_valakas_i00.png",
       "https://lineage.pmfun.com/data/img/accessory_necklace_of_frintessa_i00.png",
       "https://lineage.pmfun.com/data/img/accessory_noblesse_tiara_i00_0.png",
-      "https://lineage.pmfun.com/data/img/etc_bead_white_i00.png",
-      "https://lineage.pmfun.com/data/img/etc_imperial_scepter_i00.png",
-      "https://lineage.pmfun.com/data/img/etc_imperial_scepter_i02.png",
-      "https://lineage.pmfun.com/data/img/etc_imperial_scepter_i01.png",
       "https://lineage.pmfun.com/data/img/etc_wind_rune_i00.png"};
 
     // buttons
@@ -48,20 +44,20 @@ namespace LastRaid
     public const string BUTTON_ID_OVERRIDE = "overridebutton";
 
     // commands
-    public const string COMMAND_NAME_TOD = "tod";
-    public const string COMMAND_DESCRIPTION_TOD = "Commands for creating RB respawn window reminders.";
-    public const string COMMAND_NAME_RELATIVE = "relative";
-    public const string COMMAND_DESCRIPTION_RELATIVE = "How long ago it died as HH:MM. Max 24 hours ago!";
-    public const string COMMAND_NAME_EXACT = "exact";
-    public const string COMMAND_DESCRIPTION_EXACT = "Exact date and time of death.";
+    public const string COMMAND_TOD_NAME = "tod";
+    public const string COMMAND_TOD_DESCRIPTION = "Commands for creating RB respawn window reminders.";
+    public const string COMMAND_RELATIVE_NAME = "relative";
+    public const string COMMAND_RELATIVE_DESCRIPTION = "How long ago it died as HH:MM. Max 24 hours ago!";
+    public const string COMMAND_EXACT_NAME = "exact";
+    public const string COMMAND_EXACT_DESCRIPTION = "Exact date and time of death.";
 
-    public const string PARAM_NAME_RELATIVE_TIME = "relative-time";
-    public const string PARAM_DESCRIPTION_RELATIVE_TIME = "How long since boss death in HH:MM (e.g. 00:25 -> 25 min ago)";
-    public const string PARAM_NAME_HEADS_UP = "Heads-up-minutes";
-    public const string PARAM_DESCRIPTION_HEADS_UP = "Get notified ahead of the window start, in minutes. Default is 30.";
-    public const string PARAM_NAME_LAST_TOD = "Last-known-time-of-death";
-    public const string PARAM_DESCRIPTION_LAST_TOD = "[DD/MM/YYYY HH:MM] In your local time.";
-    public const string PARAM_NAME_USER_TIME = "Local-time";
-    public const string PARAM_DESCRIPTION_USER_TIME = "[DD/MM/YYYY HH:MM] Your current local time. (PC clock)";
+    public const string PARAM_RELATIVE_TIME_NAME = "relative-time";
+    public const string PARAM_RELATIVE_TIME_DESCRIPTION = "How long since boss death in HH:MM (e.g. 00:25 -> 25 min ago)";
+    public const string PARAM_HEADS_UP_NAME = "Heads-up-minutes";
+    public const string PARAM_HEADS_UP_DESCRIPTION = "Get notified ahead of the window start, in minutes. Default is 30.";
+    public const string PARAM_LAST_TOD_NAME = "Last-known-time-of-death";
+    public const string PARAM_LAST_TOD_DESCRIPTION = "[DD/MM/YYYY HH:MM] In your local time.";
+    public const string PARAM_USER_TIME_NAME = "Local-time";
+    public const string PARAM_USER_TIME_DESCRIPTION = "[DD/MM/YYYY HH:MM] Your current local time. (PC clock)";
   }
 }
