@@ -4,7 +4,7 @@ using static LastRaid.Consts;
 
 namespace LastRaid.Tod
 {
-  internal class TodEmbedTools
+  internal class EmbedTools
   {
     internal static EmbedBuilder CreateTodEmbed(BossNames bossName, DateTimeOffset tod, DateTimeOffset windowStartTime, DateTimeOffset windowEndTime, string link = "", string description = "")
     {
@@ -24,6 +24,18 @@ namespace LastRaid.Tod
         .AddField(new EmbedFieldBuilder()
           .WithName("Window end")
           .WithValue($"{TimestampTag.FromDateTimeOffset(windowEndTime, TimestampTagStyles.Relative)} ({TimestampTag.FromDateTimeOffset(windowEndTime)})"));
+    }
+
+    internal static EmbedBuilder CreateSiegeEmbed(Castle castleName, DateTimeOffset startTime, string link = "", string description = "")
+    {
+      return new EmbedBuilder()
+        .WithColor(Color.Purple)
+        .WithDescription(description)
+        .WithTitle(castleName.ToString())
+        .WithUrl(link)
+        .AddField(new EmbedFieldBuilder()
+          .WithName("Siege start")
+          .WithValue($"{TimestampTag.FromDateTimeOffset(startTime, TimestampTagStyles.Relative)} ({TimestampTag.FromDateTimeOffset(startTime)})"));
     }
   }
 }

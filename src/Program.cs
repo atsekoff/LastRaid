@@ -39,7 +39,7 @@ public class Program
         }))
         .AddSingleton(x => new InteractionService(
           x.GetRequiredService<DiscordSocketClient>(),
-          new InteractionServiceConfig { LogLevel = LogSeverity.Debug}))
+          new InteractionServiceConfig { LogLevel = LogSeverity.Debug }))
         .AddSingleton<InteractionHandler>()
         )
       .Build();
@@ -73,15 +73,17 @@ public class Program
 
   private static async Task OnEventStarted(SocketGuildEvent e)
   {
-    ulong channelId = TodEventTools.GetIdFromLocation(e, 0);
+    ulong channelId = TimeEventTools.GetIdFromLocation(e, 0);
     SocketTextChannel channel = e.Guild.GetTextChannel(channelId);
-    ulong msgId = TodEventTools.GetIdFromLocation(e, 1);
+    ulong msgId = TimeEventTools.GetIdFromLocation(e, 1);
     IMessage msg = await channel.GetMessageAsync(msgId);
 
     if (msg is not IUserMessage userMsg) return;
 
     string startDescription = e.Description.Split('\n').First();
-    _ = userMsg.ReplyAsync($"**{e.Name}** window {startDescription} @everyone");
+    _ = userMsg.ReplyAsync($"**{e.Name}** {startDescription} @everyone");
+
+    Console.WriteLine($"Event started: {e.Name}");
   }
 
   public static Task OnClientLog(LogMessage msg)

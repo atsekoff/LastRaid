@@ -7,31 +7,33 @@ using static LastRaid.Consts;
 
 namespace LastRaid.Tod
 {
-  internal static class TodEventTools
+  internal static class TimeEventTools
   {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "I like it like this.")]
     private const char _SEPARATOR = ',';
-    internal static async Task<IGuildScheduledEvent> CreateTodEvent(SocketInteractionContext context, BossNames bossName, DateTimeOffset windowStartTime, DateTimeOffset windowEndTime, TimeSpan headsupTime)
+
+    internal static async Task<IGuildScheduledEvent> CreateTimeEvent(this SocketInteractionContext context, string eventName, DateTimeOffset eventStartTime, DateTimeOffset eventEndTime, TimeSpan headsupTime, TimeSpan? lingerTime = null)
     {
-      bool isWindowStarted = windowStartTime <= DateTimeOffset.Now;
+      bool isAlreadyStarted = eventStartTime <= DateTimeOffset.Now;
       // if window has started, time til window is 0
-      var timeTilWindowStart = isWindowStarted ? TimeSpan.Zero : windowStartTime - DateTimeOffset.Now;
+      var timeTilWindowStart = isAlreadyStarted ? TimeSpan.Zero : eventStartTime - DateTimeOffset.Now;
       // if there isnt enough time for the wanted heads up notification, notify sooner
       headsupTime = TimeSpan.FromSeconds(Math.Min(headsupTime.TotalSeconds, timeTilWindowStart.TotalSeconds));
-      var eventStartTime = isWindowStarted ? DateTimeOffset.Now : windowStartTime - headsupTime;
+      var actualStartTime = isAlreadyStarted ? DateTimeOffset.Now : eventStartTime - headsupTime;
       // give a little head room for the event to be created and launched properly
-      eventStartTime += EVENT_HEADROOM;
+      actualStartTime += EVENT_HEADROOM;
 
       return await context.Guild.CreateEventAsync(
-        name: bossName.ToString(),
-        startTime: eventStartTime,
+        name: eventName,
+        startTime: actualStartTime,
         type: GuildScheduledEventType.External,
-        endTime: windowEndTime.AddHours(DEATH_DURATIONS[(int)bossName]),
+        endTime: eventEndTime + (lingerTime ?? TimeSpan.Zero),
         location: $"{context.Channel.Id}",
         description:
-          $"Start: **{TimestampTag.FromDateTimeOffset(windowStartTime, TimestampTagStyles.Relative)}** " +
-          $"({TimestampTag.FromDateTimeOffset(windowStartTime)})\n" +
-          $"End: **{TimestampTag.FromDateTimeOffset(windowEndTime, TimestampTagStyles.Relative)}** " +
-          $"({TimestampTag.FromDateTimeOffset(windowEndTime)})");
+          $"Start: **{TimestampTag.FromDateTimeOffset(eventStartTime, TimestampTagStyles.Relative)}** " +
+          $"({TimestampTag.FromDateTimeOffset(eventStartTime)})\n" +
+          $"End: **{TimestampTag.FromDateTimeOffset(eventEndTime, TimestampTagStyles.Relative)}** " +
+          $"({TimestampTag.FromDateTimeOffset(eventEndTime)})");
     }
 
     internal static string BuildMetadata(ulong channelId, ulong msgId)

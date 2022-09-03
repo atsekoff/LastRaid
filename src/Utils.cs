@@ -39,7 +39,7 @@ namespace LastRaid
       return true;
     }
 
-    internal static bool TryGetTodEvent(this IMessage msg, [NotNullWhen(true)] out IGuildScheduledEvent? e)
+    internal static bool TryGetEvent(this IMessage msg, [NotNullWhen(true)] out IGuildScheduledEvent? e)
     {
       e = null;
 
@@ -51,7 +51,7 @@ namespace LastRaid
       return e != null;
     }
 
-    internal static bool TryGetTodEvent(this SocketInteractionContext context, BossNames bossName, [NotNullWhen(true)] out SocketGuildEvent? @event)
+    internal static bool TryGetEvent(this SocketInteractionContext context, BossNames bossName, [NotNullWhen(true)] out SocketGuildEvent? @event)
     {
       @event = context.Guild.Events.FirstOrDefault(e =>
         e.Name == bossName.ToString() &&
@@ -61,7 +61,7 @@ namespace LastRaid
       return @event != null;
     }
 
-    internal static bool TryGetButtonLabeled(this IUserMessage msg, string buttonLabel, [NotNullWhen(true)] out ButtonComponent? button)
+    internal static bool TryGetButtonWithLabel(this IUserMessage msg, string buttonLabel, [NotNullWhen(true)] out ButtonComponent? button)
     {
       button = null;
       foreach (ActionRowComponent comp in msg.Components)

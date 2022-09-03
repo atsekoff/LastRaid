@@ -24,6 +24,7 @@ namespace LastRaid
     {
       await _commands.AddModuleAsync<TodButtonsModule>(_services);
       await _commands.AddModuleAsync<TodCommandsModule>(_services);
+      await _commands.AddModuleAsync<SiegeCommandsModule>(_services);
       _client.InteractionCreated += OnInteractionCreated;
       _commands.InteractionExecuted += OnInteractionExecuted;
     }

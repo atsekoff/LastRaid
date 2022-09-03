@@ -38,7 +38,7 @@ namespace LastRaid.Tod.Modules
       {
         await msg.DeleteAsync();
 
-        if (msg.TryGetTodEvent(out var e))
+        if (msg.TryGetEvent(out var e))
           await e.DeleteAsync();
       }
     }

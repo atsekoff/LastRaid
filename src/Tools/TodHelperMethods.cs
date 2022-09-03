@@ -12,7 +12,7 @@ namespace LastRaid.Tod
   {
     internal static async Task HandleTod(this SocketInteractionContext context, BossNames bossName, DateTimeOffset tod, TimeSpan headsupTime)
     {
-      if (context.TryGetTodEvent(bossName, out var e))
+      if (context.TryGetEvent(bossName, out var e))
       {
         await context.HandleExistingEvent(e, bossName, tod, headsupTime);
         return;
@@ -72,14 +72,14 @@ namespace LastRaid.Tod
       try
       {
         var component = TodComponentTools.CreateDropComponent();
-        IGuildScheduledEvent? e = await TodEventTools.CreateTodEvent(context, bossName, windowStartTime, windowEndTime, headsupTime);
+        IGuildScheduledEvent? e = await TimeEventTools.CreateTimeEvent(context, bossName.ToString(), windowStartTime, windowEndTime, headsupTime, TimeSpan.FromHours(DEATH_DURATIONS[(int)bossName]));
 
         try
         {
-          EmbedBuilder embed = TodEmbedTools.CreateTodEmbed(bossName, tod, windowStartTime, windowEndTime, e.GetUrl(), desc);
+          EmbedBuilder embed = EmbedTools.CreateTodEmbed(bossName, tod, windowStartTime, windowEndTime, e.GetUrl(), desc);
           await context.Interaction.RespondAsync(components: component.Build(), embed: embed.Build());
           RestInteractionMessage msg = await context.Interaction.GetOriginalResponseAsync();
-          await e.ModifyAsync(ep => ep.Location = TodEventTools.BuildMetadata(context.Channel.Id, msg.Id));
+          await e.ModifyAsync(ep => ep.Location = TimeEventTools.BuildMetadata(context.Channel.Id, msg.Id));
         }
         catch (Exception ex)
         {
