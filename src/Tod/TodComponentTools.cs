@@ -1,6 +1,6 @@
 ﻿using Discord;
 using System;
-using static LastRaid.EpicsDataConst;
+using static LastRaid.Consts;
 
 namespace LastRaid.Tod
 {

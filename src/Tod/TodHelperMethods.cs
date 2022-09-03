@@ -4,7 +4,7 @@ using Discord.Rest;
 using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
-using static LastRaid.EpicsDataConst;
+using static LastRaid.Consts;
 
 namespace LastRaid.Tod
 {

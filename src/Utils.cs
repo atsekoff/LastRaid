@@ -6,7 +6,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using static LastRaid.EpicsDataConst;
+using static LastRaid.Consts;
 
 namespace LastRaid
 {

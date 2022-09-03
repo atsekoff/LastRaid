@@ -2,7 +2,7 @@
 
 namespace LastRaid
 {
-  public static class EpicsDataConst
+  public static class Consts
   {
     public static readonly TimeSpan EVENT_HEADROOM = TimeSpan.FromSeconds(5);
     public const int DEFAULT_HEADSUP_MINUTES = 30;

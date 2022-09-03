@@ -3,7 +3,7 @@ using Discord.Interactions;
 using Discord.Rest;
 using System;
 using System.Threading.Tasks;
-using static LastRaid.EpicsDataConst;
+using static LastRaid.Consts;
 
 namespace LastRaid.Tod.Modules
 {
