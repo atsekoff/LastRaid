@@ -20,7 +20,7 @@ public class Program
 
     var config = new ConfigurationBuilder()
       .SetBasePath(AppContext.BaseDirectory)
-      .AddJsonFile("config.json")
+      .AddEnvironmentVariables()
       .Build();
 
     using IHost host = Host.CreateDefaultBuilder()
@@ -62,9 +62,9 @@ public class Program
     client.GuildAvailable += async (SocketGuild g) => await slashCommands.RegisterCommandsToGuildAsync(g.Id, true);
 
 #if DEBUG
-    await client.LoginAsync(TokenType.Bot, config["token:debug"]);
+    await client.LoginAsync(TokenType.Bot, config["DISCORD_DEBUG"]);
 #else
-    await client.LoginAsync(TokenType.Bot, config["token:release"]);
+    await client.LoginAsync(TokenType.Bot, config["DISCORD_RELEASE"]);
 #endif
     await client.StartAsync();
 
