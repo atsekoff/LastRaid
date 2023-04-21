@@ -9,9 +9,9 @@ namespace LastRaid
 
     // IMPORTANT the enum int values are used to index the arrays, ensure they are ordered correctly
     // rb data
-    public enum BossNames { QueenAnt, Core, Orfen, Zaken, Baium, Antharas, Valakas, Frintezza, Barakiel, LilithAnakim }
-    public static readonly int[] DEATH_DURATIONS = { 24, 36, 36, 48, 124, 196, 268, 48, 18, 18 };
-    public static readonly int[] WINDOW_DURATIONS = { 4, 4, 4, 4, 4, 4, 4, 4, 9, 9 };
+    public enum BossNames { QueenAnt, Core, Orfen, Zaken, Baium, Antharas, Valakas, Frintezza, Barakiel, LilithAnakim, Beleth }
+    public static readonly int[] DEATH_DURATIONS = { 24, 36, 36, 48, 124, 196, 268, 48, 18, 18, 268 };
+    public static readonly int[] WINDOW_DURATIONS = { 4, 4, 4, 4, 4, 4, 4, 4, 9, 9, 4 };
     public static readonly string[] EPIC_THUMBNAILS =
     {
       "https://lineage.pmfun.com/data/img/accessory_ring_of_queen_ant_i00.png",
@@ -23,7 +23,8 @@ namespace LastRaid
       "https://lineage.pmfun.com/data/img/accessory_necklace_of_valakas_i00.png",
       "https://lineage.pmfun.com/data/img/accessory_necklace_of_frintessa_i00.png",
       "https://lineage.pmfun.com/data/img/accessory_noblesse_tiara_i00_0.png",
-      "https://lineage.pmfun.com/data/img/etc_wind_rune_i00.png"
+      "https://lineage.pmfun.com/data/img/etc_wind_rune_i00.png",
+      "https://lineage.pmfun.com/data/img/accessary_dynasty_ring_i00.png"
     };
 
     // castle data
